@@ -41,7 +41,7 @@ shielder list
 | Project | Stack | Database / Cloud | API Health | Jira Tag |
 | :--- | :--- | :--- | :--- | :--- |
 | **LayerB2B** *(OmniLayer)* | Next.js 15 | Supabase + GCP `omnilayerai` | Gemini Key Active | `[LAYERB2B]` |
-| **Operation** *(Fluxo)* | Next.js 14 | Supabase Realtime + Firebase | Gemini Key Active | `[FLUXO]` |
+| **Operation** *(Fluxo)* | Next.js 14 | Supabase (100%) | Gemini Key Active | `[FLUXO]` |
 | **AI-Tool** *(parseliq-hr)* | React 19 / Vite | Local State (GCP `Tools AI`) | Gemini Key Active | `[AITOOL]` |
 | **Financial Calculator** | React 19 / Vite | Local State (GCP `App finance`) | Gemini Key Active | `[FINANCE]` |
 | **Autocash-sourcing** | React 19 / Vite | Local State | Nominal | `[AUTOCASH-SOURCING]` |
