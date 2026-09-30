@@ -130,7 +130,7 @@
         }
     </style>
 </head>
-<body class="bg-background text-foreground antialiased min-h-screen flex flex-col pb-16">
+<body class="bg-background text-foreground antialiased min-h-screen flex flex-col pb-28 sm:pb-20">
 
     <!-- Top Navigation & Omnibar Header -->
     <header class="sticky top-0 z-40 w-full border-b border-border glass-panel">
@@ -152,45 +152,44 @@
 
             <!-- Shielder Interactive Omnibar (Desktop / Tablet) -->
             <div class="hidden md:flex flex-1 max-w-xl mx-4">
-                <div onclick="openOmnibarModal()" class="relative flex items-center w-full h-10 px-3 rounded-lg border border-border bg-card/60 hover:bg-card hover:border-emerald-500/40 cursor-pointer transition shadow-sm group">
+                <div onclick="openOmnibarModal()" class="relative flex items-center w-full h-10 px-3 rounded-lg border border-border bg-card/60 hover:bg-card hover:border-emerald-500/40 cursor-pointer transition shadow-xs group">
                     <i data-lucide="terminal" class="w-4 h-4 text-emerald-500 mr-2.5 shrink-0"></i>
                     <span class="text-xs text-muted-foreground group-hover:text-foreground transition flex-1 truncate">
-                        Rechercher un projet, lancer une action ou taper <kbd class="px-1.5 py-0.5 text-[10px] font-mono rounded border border-border bg-muted">⌘K</kbd>...
+                        Rechercher projets, epics Jira, commandes...
                     </span>
                     <span class="hidden sm:inline-flex items-center gap-1 text-[11px] text-muted-foreground/70 font-mono">
-                        <kbd class="px-1.5 py-0.5 rounded border border-border bg-muted">Ctrl</kbd>
-                        <kbd class="px-1.5 py-0.5 rounded border border-border bg-muted">K</kbd>
+                        <kbd class="px-1.5 py-0.5 rounded border border-border bg-muted">⌘K</kbd>
                     </span>
                 </div>
             </div>
 
             <!-- Controls & Theme Toggle -->
-            <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
                 <!-- Mobile Search Button -->
-                <button onclick="openOmnibarModal()" title="Rechercher (⌘K)" class="md:hidden p-2 rounded-lg border border-border bg-card hover:bg-accent text-foreground transition">
+                <button onclick="openOmnibarModal()" aria-label="Rechercher ou exécuter une commande" title="Rechercher (⌘K)" class="md:hidden p-2 rounded-lg border border-border bg-card hover:bg-accent text-foreground transition min-w-[36px] min-h-[36px] flex items-center justify-center">
                     <i data-lucide="search" class="w-4 h-4 text-emerald-500"></i>
                 </button>
 
                 <!-- Manual On-Demand Sync Button -->
-                <button onclick="triggerManualSync()" id="global-sync-btn" title="Lancer la synchronisation manuelle à la demande" class="p-2 sm:px-3 sm:py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 transition flex items-center gap-1.5 text-xs font-semibold shadow-sm group">
+                <button onclick="triggerManualSync()" id="global-sync-btn" aria-label="Lancer la synchronisation manuelle" title="Synchroniser à la demande" class="p-2 sm:px-3 sm:py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 transition flex items-center gap-1.5 text-xs font-semibold shadow-xs group min-w-[36px] min-h-[36px] justify-center">
                     <i data-lucide="refresh-cw" id="global-sync-icon" class="w-3.5 h-3.5 transition-transform group-hover:rotate-45"></i>
                     <span id="global-sync-text" class="hidden sm:inline">Synchroniser</span>
                 </button>
 
                 <!-- Install PWA App Button -->
-                <button onclick="openPwaInstallModal()" id="pwa-install-nav-btn" title="Installer l'application PWA" class="p-2 sm:px-2.5 sm:py-1.5 rounded-lg border border-border bg-card hover:bg-accent text-foreground transition flex items-center gap-1.5 text-xs font-medium">
+                <button onclick="openPwaInstallModal()" id="pwa-install-nav-btn" aria-label="Installer l'application PWA" title="Installer l'App" class="p-2 sm:px-2.5 sm:py-1.5 rounded-lg border border-border bg-card hover:bg-accent text-foreground transition flex items-center gap-1.5 text-xs font-medium min-w-[36px] min-h-[36px] justify-center">
                     <i data-lucide="smartphone" class="w-4 h-4 text-emerald-500"></i>
                     <span class="hidden lg:inline">Installer l'App</span>
                 </button>
 
-                <!-- Jira Link -->
-                <a href="https://moslihayoub.atlassian.net/jira/software/projects/KAN/boards/1" target="_blank" class="p-2 rounded-lg border border-border bg-card hover:bg-accent text-blue-500 transition flex items-center gap-1 text-xs font-medium">
+                <!-- Jira Link (Visible from sm and up) -->
+                <a href="https://moslihayoub.atlassian.net/jira/software/projects/KAN/boards/1" target="_blank" aria-label="Ouvrir le Kanban Jira KAN" title="Jira KAN" class="hidden sm:flex p-2 rounded-lg border border-border bg-card hover:bg-accent text-blue-500 transition items-center gap-1 text-xs font-medium min-w-[36px] min-h-[36px] justify-center">
                     <i data-lucide="trello" class="w-4 h-4"></i>
                     <span class="hidden md:inline">Jira KAN</span>
                 </a>
 
                 <!-- Dark / Light Mode Toggle -->
-                <button onclick="toggleTheme()" class="p-2 rounded-lg border border-border bg-card hover:bg-accent text-foreground transition" title="Basculer Thème">
+                <button onclick="toggleTheme()" aria-label="Basculer entre le mode clair et sombre" class="p-2 rounded-lg border border-border bg-card hover:bg-accent text-foreground transition min-w-[36px] min-h-[36px] flex items-center justify-center" title="Basculer Thème">
                     <i data-lucide="sun" id="theme-icon-sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
                     <i data-lucide="moon" id="theme-icon-moon" class="w-4 h-4 block dark:hidden text-slate-700"></i>
                 </button>
@@ -360,50 +359,53 @@
 
         <!-- Section Projets ANT2.0 Multi-Views -->
         <div class="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
-            <div class="p-5 border-b border-border flex flex-col xl:flex-row xl:items-center justify-between gap-4">
-                <div>
-                    <h3 class="font-semibold text-base text-foreground flex items-center gap-2">
+            <div class="p-4 sm:p-5 border-b border-border flex flex-col xl:flex-row xl:items-center justify-between gap-3.5 sm:gap-4">
+                <div class="min-w-0">
+                    <h3 class="font-semibold text-base text-foreground flex items-center gap-2 flex-wrap">
                         <span>Cartographie des 12 Projets ANT2.0</span>
-                        <span id="active-count-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">12 Projets</span>
+                        <span id="active-count-badge" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 shrink-0">12 Projets</span>
                     </h3>
                     <p class="text-xs text-muted-foreground mt-0.5">Architecture, technologies, modules liés, compétences IA associées et couverture de tests</p>
                 </div>
                 
-                <!-- Right-aligned Smart Filters, View Switcher & Category Tabs -->
-                <div class="xl:ml-auto flex flex-wrap items-center justify-end gap-2.5">
-                    <!-- Smart Search Input with Lucide Search Icon -->
-                    <div class="relative w-full sm:w-48 md:w-56">
+                <!-- Smart Filters, View Switcher & Category Tabs (Responsive Grid/Flex) -->
+                <div class="flex flex-col sm:flex-row sm:flex-wrap xl:flex-nowrap items-stretch sm:items-center xl:justify-end gap-2 sm:gap-2.5 w-full xl:w-auto">
+                    <!-- Search Input -->
+                    <div class="relative w-full sm:w-52 md:w-56 shrink-0">
                         <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"></i>
                         <input id="smart-search-input" oninput="handleSmartSearch(this.value)" type="text" placeholder="Filtrer projets, stack, skills..." class="w-full bg-muted/40 border border-border rounded-lg pl-8 pr-3 py-1.5 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring transition">
                     </div>
 
-                    <!-- Smart Stack Filter Select -->
-                    <select id="smart-stack-filter" onchange="handleStackFilter(this.value)" class="bg-muted/40 border border-border rounded-lg px-2.5 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring transition cursor-pointer">
-                        <option value="all">Toutes Stacks</option>
-                        <option value="next">Next.js (14/15)</option>
-                        <option value="vite">React 19 / Vite</option>
-                        <option value="python">Python / AST</option>
-                        <option value="mcp">Studios IA / MCP</option>
-                    </select>
+                    <!-- Category Pills & Stack Select in one adaptive flex row -->
+                    <div class="flex items-center justify-between sm:justify-start gap-2 w-full sm:w-auto">
+                        <!-- Category Filter Tabs -->
+                        <div class="flex items-center p-1 rounded-lg border border-border bg-muted/40 text-xs shrink-0">
+                            <button onclick="filterCategory('all')" id="tab-all" class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md font-medium bg-card text-foreground shadow-xs transition">Tous (12)</button>
+                            <button onclick="filterCategory('eng')" id="tab-eng" class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md font-medium text-muted-foreground hover:text-foreground transition">Apps (9)</button>
+                            <button onclick="filterCategory('stu')" id="tab-stu" class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md font-medium text-muted-foreground hover:text-foreground transition">Studios (3)</button>
+                        </div>
 
-                    <!-- View Selector: Cartes Smart, Tableau KPIs, Matrice Skills -->
-                    <div class="flex items-center p-1 rounded-lg border border-border bg-muted/60 text-xs font-medium">
-                        <button onclick="switchView('grid')" id="view-btn-grid" class="px-2.5 py-1.5 rounded-md flex items-center gap-1.5 text-foreground bg-card shadow-sm transition">
-                            <i data-lucide="layout-grid" class="w-3.5 h-3.5 text-emerald-500"></i> Cartes
-                        </button>
-                        <button onclick="switchView('table')" id="view-btn-table" class="px-2.5 py-1.5 rounded-md flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition">
-                            <i data-lucide="table" class="w-3.5 h-3.5 text-blue-500"></i> Tableau
-                        </button>
-                        <button onclick="switchView('matrix')" id="view-btn-matrix" class="px-2.5 py-1.5 rounded-md flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition">
-                            <i data-lucide="network" class="w-3.5 h-3.5 text-purple-500"></i> Matrice
-                        </button>
+                        <!-- Smart Stack Filter Select -->
+                        <select id="smart-stack-filter" onchange="handleStackFilter(this.value)" aria-label="Filtrer par technologie" class="bg-muted/40 border border-border rounded-lg px-2.5 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring transition cursor-pointer shrink-0">
+                            <option value="all">Toutes Stacks</option>
+                            <option value="next">Next.js (14/15)</option>
+                            <option value="vite">React 19 / Vite</option>
+                            <option value="python">Python / AST</option>
+                            <option value="mcp">Studios IA / MCP</option>
+                        </select>
                     </div>
 
-                    <!-- Category Filter Tabs -->
-                    <div class="flex items-center p-1 rounded-lg border border-border bg-muted/40 text-xs">
-                        <button onclick="filterCategory('all')" id="tab-all" class="px-3 py-1.5 rounded-md font-medium bg-card text-foreground shadow-sm transition">Tous (12)</button>
-                        <button onclick="filterCategory('eng')" id="tab-eng" class="px-3 py-1.5 rounded-md font-medium text-muted-foreground hover:text-foreground transition">Apps (9)</button>
-                        <button onclick="filterCategory('stu')" id="tab-stu" class="px-3 py-1.5 rounded-md font-medium text-muted-foreground hover:text-foreground transition">Studios (3)</button>
+                    <!-- View Selector: Cartes Smart, Tableau KPIs, Matrice Skills -->
+                    <div class="grid grid-cols-3 sm:flex items-center p-1 rounded-lg border border-border bg-muted/60 text-xs font-medium w-full sm:w-auto shrink-0">
+                        <button onclick="switchView('grid')" id="view-btn-grid" aria-label="Vue Grille de Cartes" class="px-2.5 py-1.5 rounded-md flex items-center justify-center gap-1.5 text-foreground bg-card shadow-xs transition">
+                            <i data-lucide="layout-grid" class="w-3.5 h-3.5 text-emerald-500"></i> Cartes
+                        </button>
+                        <button onclick="switchView('table')" id="view-btn-table" aria-label="Vue Tableau KPIs" class="px-2.5 py-1.5 rounded-md flex items-center justify-center gap-1.5 text-muted-foreground hover:text-foreground transition">
+                            <i data-lucide="table" class="w-3.5 h-3.5 text-blue-500"></i> Tableau
+                        </button>
+                        <button onclick="switchView('matrix')" id="view-btn-matrix" aria-label="Vue Matrice Compétences" class="px-2.5 py-1.5 rounded-md flex items-center justify-center gap-1.5 text-muted-foreground hover:text-foreground transition">
+                            <i data-lucide="network" class="w-3.5 h-3.5 text-purple-500"></i> Matrice
+                        </button>
                     </div>
                 </div>
             </div>
@@ -759,8 +761,8 @@
     </div>
 
     <!-- Floating AI Assistant Round CTA (Clean, Pure Circle) -->
-    <button id="ai-assistant-cta" onclick="toggleAiAssistant()" title="Discuter avec l'Assistant IA Vocal Shielder" class="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-tr from-emerald-500 via-teal-500 to-cyan-500 text-white shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 group border border-white/30 focus:outline-none focus:ring-4 focus:ring-emerald-500/20">
-        <i id="ai-cta-icon" data-lucide="bot" class="w-7 h-7 text-white transition-transform group-hover:rotate-12"></i>
+    <button id="ai-assistant-cta" onclick="toggleAiAssistant()" aria-label="Discuter avec l'Assistant IA Vocal Shielder" title="Discuter avec l'Assistant IA Vocal Shielder" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-emerald-500 via-teal-500 to-cyan-500 text-white shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 group border border-white/30 focus:outline-none focus:ring-4 focus:ring-emerald-500/20">
+        <i id="ai-cta-icon" data-lucide="bot" class="w-6 h-6 sm:w-7 sm:h-7 text-white transition-transform group-hover:rotate-12"></i>
     </button>
 
     <!-- PWA Install Modal (Mobile Phone & Desktop WebApp) -->
@@ -1858,16 +1860,19 @@
             });
 
             // Token Efficiency Line/Bar Chart
+            const isSmallScreen = window.innerWidth < 640;
             const ctx2 = document.getElementById("tokenChart").getContext("2d");
             tokChart = new Chart(ctx2, {
                 type: "bar",
                 data: {
-                    labels: ["Autocash-DB", "Fluxo (Stock)", "AI-Tool (CVs)", "OmniLayer (Jira)", "Fin. Calculator"],
+                    labels: isSmallScreen 
+                        ? ["Autocash", "Fluxo", "AI-Tool", "OmniLayer", "FinCalc"]
+                        : ["Autocash-DB", "Fluxo (Stock)", "AI-Tool (CVs)", "OmniLayer (Jira)", "Fin. Calculator"],
                     datasets: [
                         {
                             label: "Sans Masquage (k Tokens)",
                             data: [85, 62, 54, 48, 38],
-                            backgroundColor: isDark ? "rgba(148, 163, 184, 0.25)" : "rgba(100, 116, 139, 0.2)",
+                            backgroundColor: isDark ? "rgba(148, 163, 184, 0.28)" : "rgba(100, 116, 139, 0.22)",
                             borderRadius: 6
                         },
                         {
@@ -1884,7 +1889,11 @@
                     scales: {
                         x: {
                             grid: { display: false },
-                            ticks: { color: textColor, font: { size: 10 } }
+                            ticks: { 
+                                color: textColor, 
+                                font: { size: isSmallScreen ? 9 : 10 },
+                                maxRotation: isSmallScreen ? 0 : 30
+                            }
                         },
                         y: {
                             grid: { color: gridColor },
@@ -1892,7 +1901,15 @@
                         }
                     },
                     plugins: {
-                        legend: { display: false }
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    const fullNames = ["Autocash-DB", "Fluxo (Stock & Inv)", "AI-Tool (Parsing CVs)", "OmniLayer (Jira KAN)", "Financial Calculator"];
+                                    return fullNames[context[0].dataIndex] || context[0].label;
+                                }
+                            }
+                        }
                     }
                 }
             });
