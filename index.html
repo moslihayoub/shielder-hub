@@ -1825,12 +1825,17 @@
             updateChartsTheme();
         }
 
-        // Initialize Charts
+                // Initialize Charts (Shadcn UI style - Blanc, Bleu, Noir)
         let ecoChart, tokChart;
         function initCharts() {
             const isDark = document.documentElement.classList.contains("dark");
-            const textColor = isDark ? "#94a3b8" : "#64748b";
-            const gridColor = isDark ? "rgba(255, 255, 255, 0.06)" : "rgba(0, 0, 0, 0.06)";
+            
+            // Shadcn strict palette: Blanc, Bleu, Noir
+            const textColor = isDark ? "#ffffff" : "#09090b";
+            const gridColor = isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(9, 9, 11, 0.1)";
+            const primaryBlue = "#2563eb"; // Shadcn blue
+            const secondaryColor = isDark ? "#ffffff" : "#09090b"; // White in dark, Black in light
+            const tertiaryColor = isDark ? "rgba(255, 255, 255, 0.2)" : "rgba(9, 9, 11, 0.2)";
 
             // Ecosystem Donut Chart
             const ctx1 = document.getElementById("ecosystemChart").getContext("2d");
@@ -1840,8 +1845,9 @@
                     labels: ["Ingénierie & Apps (9)", "Studios Créatifs & IA (3)", "Brain Hub (1)"],
                     datasets: [{
                         data: [9, 3, 1],
-                        backgroundColor: ["#10b981", "#06b6d4", "#a855f7"],
-                        borderWidth: 0,
+                        backgroundColor: [primaryBlue, secondaryColor, tertiaryColor],
+                        borderWidth: 2,
+                        borderColor: isDark ? "#09090b" : "#ffffff", // Match card background
                         hoverOffset: 4
                     }]
                 },
@@ -1868,14 +1874,14 @@
                         {
                             label: "Sans Masquage (k Tokens)",
                             data: [85, 62, 54, 48, 38],
-                            backgroundColor: isDark ? "rgba(148, 163, 184, 0.28)" : "rgba(100, 116, 139, 0.22)",
-                            borderRadius: 6
+                            backgroundColor: tertiaryColor,
+                            borderRadius: 4
                         },
                         {
                             label: "Avec ANT2.0 Observation Masking",
                             data: [8.5, 7.2, 6.1, 5.5, 4.2],
-                            backgroundColor: "#10b981",
-                            borderRadius: 6
+                            backgroundColor: primaryBlue,
+                            borderRadius: 4
                         }
                     ]
                 },
@@ -1899,6 +1905,9 @@
                     plugins: {
                         legend: { display: false },
                         tooltip: {
+                            backgroundColor: isDark ? "#ffffff" : "#09090b",
+                            titleColor: isDark ? "#09090b" : "#ffffff",
+                            bodyColor: isDark ? "#09090b" : "#ffffff",
                             callbacks: {
                                 title: function(context) {
                                     const fullNames = ["Autocash-DB", "Fluxo (Stock & Inv)", "AI-Tool (Parsing CVs)", "OmniLayer (Jira KAN)", "Financial Calculator"];
