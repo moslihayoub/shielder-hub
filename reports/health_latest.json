@@ -1,0 +1,390 @@
+{
+  "timestamp": "2026-09-30 15:09:21",
+  "results": [
+    {
+      "id": "layerb2b",
+      "name": "LayerB2B (OmniLayer)",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/LayerB2B",
+      "type": "Next.js",
+      "priority": "critical",
+      "exists": true,
+      "status": "HEALTHY",
+      "issues": [],
+      "warnings": [],
+      "details": {
+        "git": {
+          "branch": "main",
+          "uncommitted_files": 0,
+          "clean": true
+        },
+        "env": {
+          "found_files": [
+            ".env.local"
+          ],
+          "total_keys": 4
+        },
+        "gemini_api": {
+          "valid": true,
+          "status": "Active (50 models available)"
+        },
+        "database": {
+          "type": "Supabase",
+          "project_ref": "rjmujizjdamjgejagxax",
+          "status": "Configured"
+        },
+        "packages": {
+          "has_package_json": true,
+          "dependencies_count": 24,
+          "dev_dependencies_count": 10
+        }
+      }
+    },
+    {
+      "id": "operation",
+      "name": "Operation (Fluxo)",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/Operation",
+      "type": "Next.js",
+      "priority": "high",
+      "exists": true,
+      "status": "HEALTHY",
+      "issues": [],
+      "warnings": [],
+      "details": {
+        "git": {
+          "branch": "main",
+          "uncommitted_files": 0,
+          "clean": true
+        },
+        "env": {
+          "found_files": [
+            ".env.local"
+          ],
+          "total_keys": 12
+        },
+        "gemini_api": {
+          "valid": true,
+          "status": "Active (50 models available)"
+        },
+        "database": {
+          "type": "Firebase",
+          "project_id": "fluxo-12969",
+          "gcp_active": true
+        },
+        "packages": {
+          "has_package_json": true,
+          "dependencies_count": 20,
+          "dev_dependencies_count": 10
+        }
+      }
+    },
+    {
+      "id": "portfolio",
+      "name": "Portfolio (Ayoub MOSLIH)",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/Ayoub MOSLIH - Portfolio",
+      "type": "Vite",
+      "priority": "high",
+      "exists": true,
+      "status": "HEALTHY",
+      "issues": [],
+      "warnings": [],
+      "details": {
+        "git": {
+          "branch": "main",
+          "uncommitted_files": 0,
+          "clean": true
+        },
+        "env": {
+          "found_files": [
+            ".env",
+            ".env.local"
+          ],
+          "total_keys": 8
+        },
+        "gemini_api": {
+          "valid": true,
+          "status": "Active (50 models available)"
+        },
+        "database": {
+          "type": "Firebase",
+          "project_id": "moslih84-consultant",
+          "gcp_active": true
+        },
+        "packages": {
+          "has_package_json": true,
+          "dependencies_count": 20,
+          "dev_dependencies_count": 8
+        }
+      }
+    },
+    {
+      "id": "ai-tool",
+      "name": "AI-Tool (parseliq-hr)",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/AI-Tool",
+      "type": "React",
+      "priority": "medium",
+      "exists": true,
+      "status": "HEALTHY",
+      "issues": [],
+      "warnings": [],
+      "details": {
+        "git": {
+          "branch": "main",
+          "uncommitted_files": 0,
+          "clean": true
+        },
+        "env": {
+          "found_files": [
+            ".env"
+          ],
+          "total_keys": 3
+        },
+        "gemini_api": {
+          "valid": true,
+          "status": "Active (50 models available)"
+        },
+        "database": {
+          "type": "local/state"
+        },
+        "packages": {
+          "has_package_json": true,
+          "dependencies_count": 7,
+          "dev_dependencies_count": 4
+        }
+      }
+    },
+    {
+      "id": "financial-calculator",
+      "name": "Financial Calculator",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/Financial Calculator",
+      "type": "React/Vite",
+      "priority": "medium",
+      "exists": true,
+      "status": "HEALTHY",
+      "issues": [],
+      "warnings": [],
+      "details": {
+        "git": {
+          "branch": "main",
+          "uncommitted_files": 0,
+          "clean": true
+        },
+        "env": {
+          "found_files": [
+            ".env"
+          ],
+          "total_keys": 2
+        },
+        "gemini_api": {
+          "valid": true,
+          "status": "Active (50 models available)"
+        },
+        "database": {
+          "type": "local/state"
+        },
+        "packages": {
+          "has_package_json": true,
+          "dependencies_count": 9,
+          "dev_dependencies_count": 19
+        }
+      }
+    },
+    {
+      "id": "quicktoken-ui",
+      "name": "QuickToken-UI",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/QuickToken-UI",
+      "type": "React",
+      "priority": "low",
+      "exists": true,
+      "status": "HEALTHY",
+      "issues": [],
+      "warnings": [],
+      "details": {
+        "git": {
+          "branch": "None",
+          "uncommitted_files": 0,
+          "clean": true
+        },
+        "env": {
+          "found_files": [],
+          "total_keys": 0
+        },
+        "database": {
+          "type": "local/state"
+        },
+        "packages": {
+          "has_package_json": false
+        }
+      }
+    },
+    {
+      "id": "autocash-db",
+      "name": "Autocash-DB",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/Autocash-DB",
+      "type": "Python/Office",
+      "priority": "medium",
+      "exists": true,
+      "status": "HEALTHY",
+      "issues": [],
+      "warnings": [],
+      "details": {
+        "git": {
+          "branch": "main",
+          "uncommitted_files": 0,
+          "clean": true
+        },
+        "env": {
+          "found_files": [],
+          "total_keys": 0
+        },
+        "database": {
+          "type": "local/cache"
+        },
+        "packages": {
+          "has_package_json": false
+        }
+      }
+    },
+    {
+      "id": "autocash-sourcing",
+      "name": "Autocash-sourcing",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/Autocash-sourcing",
+      "type": "React/Vite",
+      "priority": "medium",
+      "exists": true,
+      "status": "HEALTHY",
+      "issues": [],
+      "warnings": [],
+      "details": {
+        "git": {
+          "branch": "feat/animated-bg-white-mockup",
+          "uncommitted_files": 0,
+          "clean": true
+        },
+        "env": {
+          "found_files": [],
+          "total_keys": 0
+        },
+        "database": {
+          "type": "local/state"
+        },
+        "packages": {
+          "has_package_json": true,
+          "dependencies_count": 23,
+          "dev_dependencies_count": 17
+        }
+      }
+    },
+    {
+      "id": "automation-ux-pm",
+      "name": "Automation UX-PM",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/Automation UX-PM",
+      "type": "Product/Office",
+      "priority": "medium",
+      "exists": true,
+      "status": "HEALTHY",
+      "issues": [],
+      "warnings": [],
+      "details": {
+        "git": {
+          "branch": "None",
+          "uncommitted_files": 0,
+          "clean": true
+        },
+        "env": {
+          "found_files": [],
+          "total_keys": 0
+        },
+        "database": {
+          "type": "local/excel"
+        },
+        "packages": {
+          "has_package_json": false
+        }
+      }
+    },
+    {
+      "id": "canva",
+      "name": "Canva Studio",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/2_product_studios/Canva",
+      "type": "MCP/Design",
+      "priority": "medium",
+      "exists": true,
+      "status": "HEALTHY",
+      "issues": [],
+      "warnings": [],
+      "details": {
+        "git": {
+          "branch": "None",
+          "uncommitted_files": 0,
+          "clean": true
+        },
+        "env": {
+          "found_files": [],
+          "total_keys": 0
+        },
+        "database": {
+          "type": "canva-cloud"
+        },
+        "packages": {
+          "has_package_json": false
+        }
+      }
+    },
+    {
+      "id": "g-flow",
+      "name": "G-flow Studio",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/2_product_studios/G-flow",
+      "type": "AI/Video",
+      "priority": "medium",
+      "exists": true,
+      "status": "HEALTHY",
+      "issues": [],
+      "warnings": [],
+      "details": {
+        "git": {
+          "branch": "None",
+          "uncommitted_files": 0,
+          "clean": true
+        },
+        "env": {
+          "found_files": [],
+          "total_keys": 0
+        },
+        "database": {
+          "type": "gflow-cloud"
+        },
+        "packages": {
+          "has_package_json": false
+        }
+      }
+    },
+    {
+      "id": "cosmic-spark",
+      "name": "The Cosmic Spark",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/2_product_studios/The Cosmic Spark",
+      "type": "AI/Cinema",
+      "priority": "medium",
+      "exists": true,
+      "status": "HEALTHY",
+      "issues": [],
+      "warnings": [],
+      "details": {
+        "git": {
+          "branch": "None",
+          "uncommitted_files": 0,
+          "clean": true
+        },
+        "env": {
+          "found_files": [],
+          "total_keys": 0
+        },
+        "database": {
+          "type": "local/assets"
+        },
+        "packages": {
+          "has_package_json": false
+        }
+      }
+    }
+  ]
+}

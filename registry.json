@@ -1,0 +1,192 @@
+{
+  "version": "1.0.0",
+  "guardian": "Shielder",
+  "updated_at": "2026-09-30T12:54:00Z",
+  "projects": [
+    {
+      "id": "layerb2b",
+      "name": "LayerB2B (OmniLayer)",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/LayerB2B",
+      "type": "Next.js",
+      "priority": "critical",
+      "gcp_project": "omnilayerai",
+      "database": {
+        "type": "supabase",
+        "project_ref": "rjmujizjdamjgejagxax"
+      },
+      "apis": [
+        "gemini",
+        "jira-kan",
+        "nango"
+      ],
+      "env_files": [
+        ".env",
+        ".env.local"
+      ]
+    },
+    {
+      "id": "operation",
+      "name": "Operation (Fluxo)",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/Operation",
+      "type": "Next.js",
+      "priority": "high",
+      "gcp_project": "fluxo-12969",
+      "database": {
+        "type": "firebase",
+        "project_id": "fluxo-12969"
+      },
+      "apis": [
+        "gemini",
+        "firebase-auth",
+        "firestore"
+      ],
+      "env_files": [
+        ".env",
+        ".env.local"
+      ]
+    },
+    {
+      "id": "portfolio",
+      "name": "Portfolio (Ayoub MOSLIH)",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/Ayoub MOSLIH - Portfolio",
+      "type": "Vite",
+      "priority": "high",
+      "gcp_project": "moslih84-consultant",
+      "database": {
+        "type": "firebase",
+        "project_id": "moslih84-consultant"
+      },
+      "apis": [
+        "gemini",
+        "firebase-hosting"
+      ],
+      "env_files": [
+        ".env",
+        ".env.local"
+      ]
+    },
+    {
+      "id": "ai-tool",
+      "name": "AI-Tool (parseliq-hr)",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/AI-Tool",
+      "type": "React",
+      "priority": "medium",
+      "gcp_project": "gen-lang-client-0890889702",
+      "database": {
+        "type": "local/state"
+      },
+      "apis": [
+        "gemini-2.5-flash"
+      ],
+      "env_files": [
+        ".env",
+        ".env.local"
+      ]
+    },
+    {
+      "id": "financial-calculator",
+      "name": "Financial Calculator",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/Financial Calculator",
+      "type": "React/Vite",
+      "priority": "medium",
+      "gcp_project": "gen-lang-client-0071206136",
+      "database": {
+        "type": "local/state"
+      },
+      "apis": [
+        "gemini"
+      ],
+      "env_files": [
+        ".env",
+        ".env.local"
+      ]
+    },
+    {
+      "id": "quicktoken-ui",
+      "name": "QuickToken-UI",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/QuickToken-UI",
+      "type": "React",
+      "priority": "low",
+      "gcp_project": "fluxo-12969",
+      "database": {
+        "type": "local/state"
+      },
+      "apis": [],
+      "env_files": [
+        ".env"
+      ]
+    },
+    {
+      "id": "autocash-db",
+      "name": "Autocash-DB",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/Autocash-DB",
+      "type": "Python/Office",
+      "priority": "medium",
+      "database": {
+        "type": "local/cache"
+      },
+      "apis": [],
+      "env_files": []
+    },
+    {
+      "id": "autocash-sourcing",
+      "name": "Autocash-sourcing",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/Autocash-sourcing",
+      "type": "React/Vite",
+      "priority": "medium",
+      "database": {
+        "type": "local/state"
+      },
+      "apis": [],
+      "env_files": []
+    },
+    {
+      "id": "automation-ux-pm",
+      "name": "Automation UX-PM",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/Automation UX-PM",
+      "type": "Product/Office",
+      "priority": "medium",
+      "database": {
+        "type": "local/excel"
+      },
+      "apis": [],
+      "env_files": []
+    },
+    {
+      "id": "canva",
+      "name": "Canva Studio",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/2_product_studios/Canva",
+      "type": "MCP/Design",
+      "priority": "medium",
+      "database": {
+        "type": "canva-cloud"
+      },
+      "apis": [],
+      "env_files": []
+    },
+    {
+      "id": "g-flow",
+      "name": "G-flow Studio",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/2_product_studios/G-flow",
+      "type": "AI/Video",
+      "priority": "medium",
+      "database": {
+        "type": "gflow-cloud"
+      },
+      "apis": [],
+      "env_files": []
+    },
+    {
+      "id": "cosmic-spark",
+      "name": "The Cosmic Spark",
+      "path": "/Users/fahdrahali/Downloads/ANT2.0/2_product_studios/The Cosmic Spark",
+      "type": "AI/Cinema",
+      "priority": "medium",
+      "database": {
+        "type": "local/assets"
+      },
+      "apis": [],
+      "env_files": []
+    }
+  ]
+}

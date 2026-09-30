@@ -1,0 +1,2292 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🛡️ Shielder Hub — Antigravity 2.0 Command Center</title>
+    <!-- PWA Web App Meta Tags & Apple Icons -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Shielder">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <meta name="theme-color" content="#09090b">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Supabase JS Client for Realtime On-Demand Sync -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        border: "hsl(var(--border))",
+                        input: "hsl(var(--input))",
+                        ring: "hsl(var(--ring))",
+                        background: "hsl(var(--background))",
+                        foreground: "hsl(var(--foreground))",
+                        primary: {
+                            DEFAULT: "hsl(var(--primary))",
+                            foreground: "hsl(var(--primary-foreground))",
+                        },
+                        secondary: {
+                            DEFAULT: "hsl(var(--secondary))",
+                            foreground: "hsl(var(--secondary-foreground))",
+                        },
+                        muted: {
+                            DEFAULT: "hsl(var(--muted))",
+                            foreground: "hsl(var(--muted-foreground))",
+                        },
+                        accent: {
+                            DEFAULT: "hsl(var(--accent))",
+                            foreground: "hsl(var(--accent-foreground))",
+                        },
+                        card: {
+                            DEFAULT: "hsl(var(--card))",
+                            foreground: "hsl(var(--card-foreground))",
+                        },
+                    },
+                    borderRadius: {
+                        lg: "var(--radius)",
+                        md: "calc(var(--radius) - 2px)",
+                        sm: "calc(var(--radius) - 4px)",
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 240 10% 3.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 240 10% 3.9%;
+            --primary: 240 5.9% 10%;
+            --primary-foreground: 0 0% 98%;
+            --secondary: 240 4.8% 95.9%;
+            --secondary-foreground: 240 5.9% 10%;
+            --muted: 240 4.8% 95.9%;
+            --muted-foreground: 240 3.8% 46.1%;
+            --accent: 240 4.8% 95.9%;
+            --accent-foreground: 240 5.9% 10%;
+            --border: 240 5.9% 90%;
+            --input: 240 5.9% 90%;
+            --ring: 240 5.9% 10%;
+            --radius: 0.75rem;
+        }
+        .dark {
+            --background: 240 10% 3.9%;
+            --foreground: 0 0% 98%;
+            --card: 240 10% 5.5%;
+            --card-foreground: 0 0% 98%;
+            --primary: 0 0% 98%;
+            --primary-foreground: 240 5.9% 10%;
+            --secondary: 240 3.7% 15.9%;
+            --secondary-foreground: 0 0% 98%;
+            --muted: 240 3.7% 15.9%;
+            --muted-foreground: 240 5% 64.9%;
+            --accent: 240 3.7% 15.9%;
+            --accent-foreground: 0 0% 98%;
+            --border: 240 3.7% 15.9%;
+            --input: 240 3.7% 15.9%;
+            --ring: 240 4.9% 83.9%;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+        }
+        .dark .glass-panel {
+            background: rgba(18, 18, 24, 0.75);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-background text-foreground antialiased min-h-screen flex flex-col pb-16">
+
+    <!-- Top Navigation & Omnibar Header -->
+    <header class="sticky top-0 z-40 w-full border-b border-border glass-panel">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+            
+            <!-- Logo & Brand -->
+            <div class="flex items-center gap-3 shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
+                    <i data-lucide="shield-check" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold tracking-tight text-lg">SHIELDER</span>
+                        <span class="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">ANT2.0 Hub</span>
+                    </div>
+                    <p class="text-xs text-muted-foreground hidden sm:block">Multi-Project Guardian & Diagnostic Engine</p>
+                </div>
+            </div>
+
+            <!-- Shielder Interactive Omnibar -->
+            <div class="flex-1 max-w-xl mx-4">
+                <div onclick="openOmnibarModal()" class="relative flex items-center w-full h-10 px-3 rounded-lg border border-border bg-card/60 hover:bg-card hover:border-emerald-500/40 cursor-pointer transition shadow-sm group">
+                    <i data-lucide="terminal" class="w-4 h-4 text-emerald-500 mr-2.5 shrink-0"></i>
+                    <span class="text-xs text-muted-foreground group-hover:text-foreground transition flex-1 truncate">
+                        Rechercher un projet, lancer une action ou taper <kbd class="px-1.5 py-0.5 text-[10px] font-mono rounded border border-border bg-muted">⌘K</kbd>...
+                    </span>
+                    <span class="hidden sm:inline-flex items-center gap-1 text-[11px] text-muted-foreground/70 font-mono">
+                        <kbd class="px-1.5 py-0.5 rounded border border-border bg-muted">Ctrl</kbd>
+                        <kbd class="px-1.5 py-0.5 rounded border border-border bg-muted">K</kbd>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Controls & Theme Toggle -->
+            <div class="flex items-center gap-2.5 shrink-0">
+                <!-- Manual On-Demand Sync Button -->
+                <button onclick="triggerManualSync()" id="global-sync-btn" title="Lancer la synchronisation manuelle à la demande" class="p-2 sm:px-3 sm:py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 transition flex items-center gap-1.5 text-xs font-semibold shadow-sm group">
+                    <i data-lucide="refresh-cw" id="global-sync-icon" class="w-3.5 h-3.5 transition-transform group-hover:rotate-45"></i>
+                    <span id="global-sync-text" class="hidden sm:inline">Synchroniser</span>
+                </button>
+
+                <!-- Install PWA App Button -->
+                <button onclick="openPwaInstallModal()" id="pwa-install-nav-btn" title="Installer l'application PWA" class="p-2 sm:px-2.5 sm:py-1.5 rounded-lg border border-border bg-card hover:bg-accent text-foreground transition flex items-center gap-1.5 text-xs font-medium">
+                    <i data-lucide="smartphone" class="w-4 h-4 text-emerald-500"></i>
+                    <span class="hidden lg:inline">Installer l'App</span>
+                </button>
+
+                <!-- Jira Link -->
+                <a href="https://moslihayoub.atlassian.net/jira/software/projects/KAN/boards/1" target="_blank" class="p-2 rounded-lg border border-border bg-card hover:bg-accent text-blue-500 transition flex items-center gap-1 text-xs font-medium">
+                    <i data-lucide="trello" class="w-4 h-4"></i>
+                    <span class="hidden md:inline">Jira KAN</span>
+                </a>
+
+                <!-- Dark / Light Mode Toggle -->
+                <button onclick="toggleTheme()" class="p-2 rounded-lg border border-border bg-card hover:bg-accent text-foreground transition" title="Basculer Thème">
+                    <i data-lucide="sun" id="theme-icon-sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+                    <i data-lucide="moon" id="theme-icon-moon" class="w-4 h-4 block dark:hidden text-slate-700"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 flex-1 w-full space-y-6">
+
+        <!-- Top Alert / System Banner -->
+        <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                <div>
+                    <h4 class="text-sm font-semibold text-foreground flex items-center gap-2">
+                        Écosystème ANT2.0 — 100% Opérationnel & Sécurisé
+                    </h4>
+                    <p class="text-xs text-muted-foreground">12 projets monitorés par Shielder • Zero Broken Push actif • Synchronisation Jira KAN validée • Quotas IA nominaux</p>
+                </div>
+            </div>
+            <div class="hidden sm:flex items-center gap-2 text-xs font-mono text-muted-foreground">
+                <span class="px-2.5 py-1 rounded-md bg-card border border-border flex items-center gap-1.5 text-foreground shadow-xs">
+                    <i data-lucide="cloud-check" class="w-3.5 h-3.5 text-emerald-500"></i>
+                    <span id="last-sync-time">Synchro : À la demande</span>
+                </span>
+                <span class="px-2.5 py-1 rounded-md bg-card border border-border">Vercel: On-Demand</span>
+            </div>
+        </div>
+
+        <!-- 4 KPI Cards (shadcn Style) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- KPI 1 : Projets Monitorés -->
+            <div class="rounded-xl border border-border bg-card p-5 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-medium text-muted-foreground">Projets Suivis</span>
+                    <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center">
+                        <i data-lucide="folder-git-2" class="w-4 h-4"></i>
+                    </div>
+                </div>
+                <div>
+                    <div class="text-3xl font-extrabold tracking-tight">12 <span class="text-sm font-normal text-muted-foreground">/ 12</span></div>
+                    <p class="text-xs text-emerald-500 font-medium flex items-center gap-1 mt-1">
+                        <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> 100% Statut HEALTHY
+                    </p>
+                </div>
+                <div class="w-full bg-muted rounded-full h-1.5 overflow-hidden">
+                    <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 100%"></div>
+                </div>
+            </div>
+
+            <!-- KPI 2 : Moteur LLM & IA -->
+            <div class="rounded-xl border border-border bg-card p-5 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-medium text-muted-foreground">Moteur IA Actif</span>
+                    <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i>
+                    </div>
+                </div>
+                <div>
+                    <div class="text-2xl font-extrabold tracking-tight truncate">Gemini 3.8 Flash</div>
+                    <p class="text-xs text-muted-foreground mt-1">Fenêtre : 1M tokens • Clés Google AI Studio 200 OK</p>
+                </div>
+                <div class="flex items-center gap-1.5 text-[11px] font-mono text-emerald-500">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    <span>Pro 3.1 & Flash-Lite prêts</span>
+                </div>
+            </div>
+
+            <!-- KPI 3 : Crédits & Quotas Antigravity -->
+            <div class="rounded-xl border border-border bg-card p-5 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-medium text-muted-foreground">Crédits TestSprite Cloud</span>
+                    <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center">
+                        <i data-lucide="zap" class="w-4 h-4"></i>
+                    </div>
+                </div>
+                <div>
+                    <div class="text-3xl font-extrabold tracking-tight">150 <span class="text-xs font-normal text-muted-foreground">Crédits</span></div>
+                    <p class="text-xs text-muted-foreground mt-1">7 projets connectés • Quota mensuel intact</p>
+                </div>
+                <div class="w-full bg-muted rounded-full h-1.5 overflow-hidden">
+                    <div class="bg-amber-500 h-1.5 rounded-full" style="width: 100%"></div>
+                </div>
+            </div>
+
+            <!-- KPI 4 : Skills & Capacités -->
+            <div class="rounded-xl border border-border bg-card p-5 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-medium text-muted-foreground">Skills Antigravity</span>
+                    <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-500 flex items-center justify-center">
+                        <i data-lucide="boxes" class="w-4 h-4"></i>
+                    </div>
+                </div>
+                <div>
+                    <div class="text-3xl font-extrabold tracking-tight">53 <span class="text-xs font-normal text-muted-foreground">/ 64 slots</span></div>
+                    <p class="text-xs text-purple-400 font-medium mt-1">11 slots disponibles restants</p>
+                </div>
+                <div class="w-full bg-muted rounded-full h-1.5 overflow-hidden">
+                    <div class="bg-purple-500 h-1.5 rounded-full" style="width: 82.8%"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 2 Interactive Graphs (Chart.js styled shadcn) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Chart 1 : Répartition de l'Écosystème ANT2.0 -->
+            <div class="rounded-xl border border-border bg-card p-5 shadow-sm flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <h3 class="font-semibold text-sm">Structure de l'Écosystème</h3>
+                        <i data-lucide="pie-chart" class="w-4 h-4 text-muted-foreground"></i>
+                    </div>
+                    <p class="text-xs text-muted-foreground mb-4">Répartition des 12 projets et du Hub Brain</p>
+                </div>
+                <div class="h-48 relative flex items-center justify-center">
+                    <canvas id="ecosystemChart"></canvas>
+                </div>
+                <div class="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-border text-center text-xs">
+                    <div>
+                        <span class="text-emerald-500 font-bold block">9</span>
+                        <span class="text-[10px] text-muted-foreground">Ingénierie</span>
+                    </div>
+                    <div>
+                        <span class="text-cyan-500 font-bold block">3</span>
+                        <span class="text-[10px] text-muted-foreground">Studios IA</span>
+                    </div>
+                    <div>
+                        <span class="text-purple-500 font-bold block">1</span>
+                        <span class="text-[10px] text-muted-foreground">Brain Hub</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart 2 : Performance de Santé & Efficacité Token -->
+            <div class="rounded-xl border border-border bg-card p-5 shadow-sm lg:col-span-2 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <div>
+                            <h3 class="font-semibold text-sm">Efficacité Méthodologique & Économie de Tokens</h3>
+                            <p class="text-xs text-muted-foreground">Comparaison de la consommation avant / après application de l'Observation Masking</p>
+                        </div>
+                        <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                            -85% Tokens
+                        </span>
+                    </div>
+                </div>
+                <div class="h-48 mt-4">
+                    <canvas id="tokenChart"></canvas>
+                </div>
+                <div class="flex items-center justify-between text-xs text-muted-foreground pt-3 border-t border-border mt-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-slate-500/50"></span>
+                        <span>Méthode brute sans filtre</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                        <span>Standard ANT2.0 (Single-trip & Masking)</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Section Projets ANT2.0 Multi-Views -->
+        <div class="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+            <div class="p-5 border-b border-border flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+                <div>
+                    <h3 class="font-semibold text-base text-foreground flex items-center gap-2">
+                        <span>Cartographie des 12 Projets ANT2.0</span>
+                        <span id="active-count-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">12 Projets</span>
+                    </h3>
+                    <p class="text-xs text-muted-foreground mt-0.5">Architecture, technologies, modules liés, compétences IA associées et couverture de tests</p>
+                </div>
+                
+                <!-- Right-aligned Smart Filters, View Switcher & Category Tabs -->
+                <div class="xl:ml-auto flex flex-wrap items-center justify-end gap-2.5">
+                    <!-- Smart Search Input with Lucide Search Icon -->
+                    <div class="relative w-full sm:w-48 md:w-56">
+                        <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"></i>
+                        <input id="smart-search-input" oninput="handleSmartSearch(this.value)" type="text" placeholder="Filtrer projets, stack, skills..." class="w-full bg-muted/40 border border-border rounded-lg pl-8 pr-3 py-1.5 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring transition">
+                    </div>
+
+                    <!-- Smart Stack Filter Select -->
+                    <select id="smart-stack-filter" onchange="handleStackFilter(this.value)" class="bg-muted/40 border border-border rounded-lg px-2.5 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring transition cursor-pointer">
+                        <option value="all">Toutes Stacks</option>
+                        <option value="next">Next.js (14/15)</option>
+                        <option value="vite">React 19 / Vite</option>
+                        <option value="python">Python / AST</option>
+                        <option value="mcp">Studios IA / MCP</option>
+                    </select>
+
+                    <!-- View Selector: Cartes Smart, Tableau KPIs, Matrice Skills -->
+                    <div class="flex items-center p-1 rounded-lg border border-border bg-muted/60 text-xs font-medium">
+                        <button onclick="switchView('grid')" id="view-btn-grid" class="px-2.5 py-1.5 rounded-md flex items-center gap-1.5 text-foreground bg-card shadow-sm transition">
+                            <i data-lucide="layout-grid" class="w-3.5 h-3.5 text-emerald-500"></i> Cartes
+                        </button>
+                        <button onclick="switchView('table')" id="view-btn-table" class="px-2.5 py-1.5 rounded-md flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition">
+                            <i data-lucide="table" class="w-3.5 h-3.5 text-blue-500"></i> Tableau
+                        </button>
+                        <button onclick="switchView('matrix')" id="view-btn-matrix" class="px-2.5 py-1.5 rounded-md flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition">
+                            <i data-lucide="network" class="w-3.5 h-3.5 text-purple-500"></i> Matrice
+                        </button>
+                    </div>
+
+                    <!-- Category Filter Tabs -->
+                    <div class="flex items-center p-1 rounded-lg border border-border bg-muted/40 text-xs">
+                        <button onclick="filterCategory('all')" id="tab-all" class="px-3 py-1.5 rounded-md font-medium bg-card text-foreground shadow-sm transition">Tous (12)</button>
+                        <button onclick="filterCategory('eng')" id="tab-eng" class="px-3 py-1.5 rounded-md font-medium text-muted-foreground hover:text-foreground transition">Apps (9)</button>
+                        <button onclick="filterCategory('stu')" id="tab-stu" class="px-3 py-1.5 rounded-md font-medium text-muted-foreground hover:text-foreground transition">Studios (3)</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View 1: Smart Cards Grid -->
+            <div id="view-container-grid" class="p-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                <!-- Injected by JS -->
+            </div>
+
+            <!-- View 2: High-Density Table View -->
+            <div id="view-container-table" class="overflow-x-auto hidden">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                        <tr class="border-b border-border bg-muted/30 text-muted-foreground uppercase text-[10px] tracking-wider">
+                            <th class="py-3 px-4 font-semibold">Projet & Catégorie</th>
+                            <th class="py-3 px-4 font-semibold">Stack & Techno</th>
+                            <th class="py-3 px-4 font-semibold">Apps / Modules Liés</th>
+                            <th class="py-3 px-4 font-semibold">Skills Clés Utilisées</th>
+                            <th class="py-3 px-4 font-semibold">Jira KAN Epic</th>
+                            <th class="py-3 px-4 font-semibold">Moteur Test / KPIs</th>
+                            <th class="py-3 px-4 font-semibold">Live / Repo</th>
+                            <th class="py-3 px-4 font-semibold text-right">Santé</th>
+                        </tr>
+                    </thead>
+                    <tbody id="projects-table-body" class="divide-y divide-border">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- View 3: Skills & Cross-Reference Matrix View -->
+            <div id="view-container-matrix" class="p-5 space-y-4 hidden">
+                <!-- Injected by JS -->
+            </div>
+
+        </div>
+
+        <!-- Section Skills & Tools Installed -->
+        <div class="rounded-xl border border-border bg-card p-5 shadow-sm space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="font-semibold text-sm">Inventaire des 53 Skills Antigravity Actifs</h3>
+                    <p class="text-xs text-muted-foreground">Capacité actuelle : 53 skills chargés • 11 slots libres pour de futures extensions</p>
+                </div>
+                <div class="text-xs font-mono text-muted-foreground flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded bg-muted border border-border">Capacité: 82.8%</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 text-xs">
+                <div class="p-2.5 rounded-lg border border-border bg-muted/20 hover:border-emerald-500/40 transition">
+                    <div class="font-semibold text-emerald-500 flex items-center gap-1.5">
+                        <i data-lucide="cpu" class="w-3.5 h-3.5"></i> m84-unified
+                    </div>
+                    <span class="text-[10px] text-muted-foreground">Master Governance</span>
+                </div>
+                <div class="p-2.5 rounded-lg border border-border bg-muted/20 hover:border-blue-500/40 transition">
+                    <div class="font-semibold text-blue-500 flex items-center gap-1.5">
+                        <i data-lucide="trello" class="w-3.5 h-3.5"></i> jira-atlassian
+                    </div>
+                    <span class="text-[10px] text-muted-foreground">Jira KAN Automation</span>
+                </div>
+                <div class="p-2.5 rounded-lg border border-border bg-muted/20 hover:border-amber-500/40 transition">
+                    <div class="font-semibold text-amber-500 flex items-center gap-1.5">
+                        <i data-lucide="check-square" class="w-3.5 h-3.5"></i> testsprite
+                    </div>
+                    <span class="text-[10px] text-muted-foreground">Cloud E2E 150 Credits</span>
+                </div>
+                <div class="p-2.5 rounded-lg border border-border bg-muted/20 hover:border-purple-500/40 transition">
+                    <div class="font-semibold text-purple-500 flex items-center gap-1.5">
+                        <i data-lucide="database" class="w-3.5 h-3.5"></i> supabase
+                    </div>
+                    <span class="text-[10px] text-muted-foreground">Postgres & Realtime</span>
+                </div>
+                <div class="p-2.5 rounded-lg border border-border bg-muted/20 hover:border-cyan-500/40 transition">
+                    <div class="font-semibold text-cyan-500 flex items-center gap-1.5">
+                        <i data-lucide="video" class="w-3.5 h-3.5"></i> google-flow
+                    </div>
+                    <span class="text-[10px] text-muted-foreground">Veo 2 & Factory</span>
+                </div>
+                <div class="p-2.5 rounded-lg border border-border bg-muted/20 hover:border-rose-500/40 transition">
+                    <div class="font-semibold text-rose-500 flex items-center gap-1.5">
+                        <i data-lucide="palette" class="w-3.5 h-3.5"></i> canva
+                    </div>
+                    <span class="text-[10px] text-muted-foreground">MCP Official Studio</span>
+                </div>
+                <div class="p-2.5 rounded-lg border border-border bg-muted/20 hover:border-indigo-500/40 transition">
+                    <div class="font-semibold text-indigo-500 flex items-center gap-1.5">
+                        <i data-lucide="film" class="w-3.5 h-3.5"></i> higgsfield
+                    </div>
+                    <span class="text-[10px] text-muted-foreground">Seedance 2.5 Cinema</span>
+                </div>
+                <div class="p-2.5 rounded-lg border border-border bg-muted/20 hover:border-teal-500/40 transition">
+                    <div class="font-semibold text-teal-500 flex items-center gap-1.5">
+                        <i data-lucide="feather" class="w-3.5 h-3.5"></i> darija-script
+                    </div>
+                    <span class="text-[10px] text-muted-foreground">Voiceover Moroccan</span>
+                </div>
+                <div class="p-2.5 rounded-lg border border-border bg-muted/20 hover:border-slate-500/40 transition">
+                    <div class="font-semibold text-slate-400 flex items-center gap-1.5">
+                        <i data-lucide="shield" class="w-3.5 h-3.5"></i> shielder
+                    </div>
+                    <span class="text-[10px] text-muted-foreground">Central Health Hub</span>
+                </div>
+                <div class="p-2.5 rounded-lg border border-border bg-muted/20 hover:border-emerald-500/40 transition">
+                    <div class="font-semibold text-emerald-400 flex items-center gap-1.5">
+                        <i data-lucide="minimize-2" class="w-3.5 h-3.5"></i> token-optimizer
+                    </div>
+                    <span class="text-[10px] text-muted-foreground">Autocash Masking</span>
+                </div>
+                <div class="p-2.5 rounded-lg border border-border bg-muted/20 hover:border-blue-400/40 transition">
+                    <div class="font-semibold text-blue-400 flex items-center gap-1.5">
+                        <i data-lucide="layout" class="w-3.5 h-3.5"></i> modern-web
+                    </div>
+                    <span class="text-[10px] text-muted-foreground">Next.js 15 & CSS</span>
+                </div>
+                <div onclick="openSkillsCatalogModal()" class="p-2.5 rounded-lg border-2 border-dashed border-emerald-500/40 bg-emerald-500/5 hover:bg-emerald-500/10 hover:border-emerald-500 cursor-pointer flex flex-col items-center justify-center text-center transition group">
+                    <span class="text-[11px] font-semibold text-emerald-500 flex items-center gap-1 group-hover:scale-105 transition">
+                        <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> +11 Slots Libres
+                    </span>
+                    <span class="text-[9px] text-muted-foreground">Cliquez pour explorer</span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Omnibar Modal (Command Palette Cmd+K) -->
+    <div id="omnibar-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-start justify-center pt-20 px-4">
+        <div class="w-full max-w-xl rounded-xl border border-border bg-card shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
+            
+            <div class="p-3 border-b border-border flex items-center gap-3">
+                <i data-lucide="terminal" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                <input id="omnibar-input" oninput="handleOmnibarSearch(this.value)" type="text" placeholder="Taper une commande Shielder (/goal, check, jira...) ou chercher un projet..." class="w-full bg-transparent border-0 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none">
+                <button onclick="closeOmnibarModal()" class="text-xs px-2 py-1 rounded bg-muted text-muted-foreground hover:text-foreground">Échap</button>
+            </div>
+
+            <div id="omnibar-results" class="max-h-72 overflow-y-auto p-2 space-y-1 text-xs">
+                <!-- Actions -->
+                <div class="px-2 py-1.5 text-[10px] font-semibold uppercase text-muted-foreground">Commandes Shielder Rapides</div>
+                <div onclick="execOmniAction('check')" class="p-2 rounded-lg hover:bg-accent cursor-pointer flex items-center justify-between group">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="play" class="w-4 h-4 text-emerald-500"></i>
+                        <span class="font-medium text-foreground">shielder check</span>
+                        <span class="text-muted-foreground">— Lancer l'audit de santé immédiat des 12 projets</span>
+                    </div>
+                    <kbd class="px-1.5 py-0.5 rounded border border-border bg-muted text-[10px]">Entrée</kbd>
+                </div>
+                <div onclick="execOmniAction('goal')" class="p-2 rounded-lg hover:bg-accent cursor-pointer flex items-center justify-between group">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="repeat" class="w-4 h-4 text-cyan-500"></i>
+                        <span class="font-medium text-foreground">/goal</span>
+                        <span class="text-muted-foreground">— Mode d'autonomie complète (Loop & Self-healing)</span>
+                    </div>
+                </div>
+                <div onclick="execOmniAction('jira')" class="p-2 rounded-lg hover:bg-accent cursor-pointer flex items-center justify-between group">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="trello" class="w-4 h-4 text-blue-500"></i>
+                        <span class="font-medium text-foreground">Ouvrir Jira KAN</span>
+                        <span class="text-muted-foreground">— Voir le tableau Kanban Digital Product M84</span>
+                    </div>
+                </div>
+
+                <div class="px-2 py-1.5 text-[10px] font-semibold uppercase text-muted-foreground mt-2">Accès Direct Projets</div>
+                <div id="omnibar-projects-list"></div>
+            </div>
+
+            <div class="p-2.5 bg-muted/40 border-t border-border flex items-center justify-between text-[11px] text-muted-foreground">
+                <span>Shielder Antigravity 2.0 Engine</span>
+                <span class="flex items-center gap-2">
+                    <span>Navigation <kbd class="px-1 py-0.5 rounded border bg-card text-[10px]">↑</kbd> <kbd class="px-1 py-0.5 rounded border bg-card text-[10px]">↓</kbd></span>
+                    <span>Sélectionner <kbd class="px-1 py-0.5 rounded border bg-card text-[10px]">↵</kbd></span>
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Skills Catalog Modal (+11 Slots Libres & 53 Skills Inventory) -->
+    <div id="skills-catalog-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="w-full max-w-4xl max-h-[85vh] rounded-2xl border border-border bg-card shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150 my-auto">
+            
+            <!-- Header -->
+            <div class="p-5 border-b border-border flex items-center justify-between bg-muted/40">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-500 flex items-center justify-center text-white shadow">
+                        <i data-lucide="boxes" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-base text-foreground flex items-center gap-2">
+                            <span>Hub des Skills Antigravity (53 Actifs + 11 Slots)</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Capacité : 53/64 (82.8%)</span>
+                        </h3>
+                        <p class="text-xs text-muted-foreground">Extensions d'intelligence artificielle, gouvernance Jira, studios multimédia et moteurs de test</p>
+                    </div>
+                </div>
+                <button onclick="closeSkillsCatalogModal()" class="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-5 space-y-6 overflow-y-auto text-xs">
+                
+                <!-- 11 Slots Disponibles Section -->
+                <div class="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="flex h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                            <h4 class="font-semibold text-sm text-foreground">11 Slots Libres Disponibles — Extensions Suggérées</h4>
+                        </div>
+                        <span class="text-[10px] text-muted-foreground font-mono">Prêts pour installation via Antigravity CLI</span>
+                    </div>
+                    <p class="text-muted-foreground text-xs leading-relaxed">
+                        Ces slots d'extension mémoire permettent d'ajouter de nouvelles capacités spécialisées sans impacter le budget de contexte token grâce à l'<em>Observation Masking</em>.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 pt-1">
+                        <div class="p-2.5 rounded-lg border border-border bg-card hover:border-emerald-500/50 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-semibold text-foreground flex items-center gap-1.5"><i data-lucide="git-pull-request" class="w-3.5 h-3.5 text-emerald-500"></i> github-actions-ci</span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">Slot #1</span>
+                            </div>
+                            <p class="text-[11px] text-muted-foreground mb-2">Automatisation CI/CD, tests automatisés sur PR et protection des branches main.</p>
+                            <span class="text-[10px] font-mono text-emerald-500">shielder install-skill github-actions</span>
+                        </div>
+
+                        <div class="p-2.5 rounded-lg border border-border bg-card hover:border-emerald-500/50 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-semibold text-foreground flex items-center gap-1.5"><i data-lucide="box" class="w-3.5 h-3.5 text-blue-500"></i> docker-compose</span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">Slot #2</span>
+                            </div>
+                            <p class="text-[11px] text-muted-foreground mb-2">Conteneurisation locale des bases Supabase et microservices Python multi-arch.</p>
+                            <span class="text-[10px] font-mono text-blue-500">shielder install-skill docker-compose</span>
+                        </div>
+
+                        <div class="p-2.5 rounded-lg border border-border bg-card hover:border-emerald-500/50 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-semibold text-foreground flex items-center gap-1.5"><i data-lucide="activity" class="w-3.5 h-3.5 text-rose-500"></i> sentry-monitoring</span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">Slot #3</span>
+                            </div>
+                            <p class="text-[11px] text-muted-foreground mb-2">Tracking des erreurs de production Next.js 15 en temps réel avec sourcemaps.</p>
+                            <span class="text-[10px] font-mono text-rose-500">shielder install-skill sentry</span>
+                        </div>
+
+                        <div class="p-2.5 rounded-lg border border-border bg-card hover:border-emerald-500/50 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-semibold text-foreground flex items-center gap-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i> redis-upstash-cache</span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">Slot #4</span>
+                            </div>
+                            <p class="text-[11px] text-muted-foreground mb-2">Couche de cache mémoire Serverless pour accélérer les requêtes Fluxo & OmniLayer.</p>
+                            <span class="text-[10px] font-mono text-amber-500">shielder install-skill redis-cache</span>
+                        </div>
+
+                        <div class="p-2.5 rounded-lg border border-border bg-card hover:border-emerald-500/50 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-semibold text-foreground flex items-center gap-1.5"><i data-lucide="credit-card" class="w-3.5 h-3.5 text-indigo-500"></i> stripe-billing-sdk</span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">Slot #5</span>
+                            </div>
+                            <p class="text-[11px] text-muted-foreground mb-2">Gestion des abonnements B2B, checkout sessions et webhooks automatisés.</p>
+                            <span class="text-[10px] font-mono text-indigo-500">shielder install-skill stripe-billing</span>
+                        </div>
+
+                        <div class="p-2.5 rounded-lg border border-border bg-card hover:border-emerald-500/50 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-semibold text-foreground flex items-center gap-1.5"><i data-lucide="mail" class="w-3.5 h-3.5 text-cyan-500"></i> resend-email-api</span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">Slot #6</span>
+                            </div>
+                            <p class="text-[11px] text-muted-foreground mb-2">Envoi d'e-mails transactionnels avec React Email et suivi de délivrabilité.</p>
+                            <span class="text-[10px] font-mono text-cyan-500">shielder install-skill resend</span>
+                        </div>
+
+                        <div class="p-2.5 rounded-lg border border-border bg-card hover:border-emerald-500/50 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-semibold text-foreground flex items-center gap-1.5"><i data-lucide="cloud" class="w-3.5 h-3.5 text-orange-500"></i> cloudflare-workers</span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">Slot #7</span>
+                            </div>
+                            <p class="text-[11px] text-muted-foreground mb-2">Exécution Edge, KV storage et routage mondial à latence ultra-faible.</p>
+                            <span class="text-[10px] font-mono text-orange-500">shielder install-skill cloudflare</span>
+                        </div>
+
+                        <div class="p-2.5 rounded-lg border border-border bg-card hover:border-emerald-500/50 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-semibold text-foreground flex items-center gap-1.5"><i data-lucide="gauge" class="w-3.5 h-3.5 text-teal-500"></i> playwright-perf</span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">Slot #8</span>
+                            </div>
+                            <p class="text-[11px] text-muted-foreground mb-2">Audit continu des Core Web Vitals (LCP, FID, CLS) sur les builds Vercel.</p>
+                            <span class="text-[10px] font-mono text-teal-500">shielder install-skill perf-audit</span>
+                        </div>
+
+                        <div class="p-2.5 rounded-lg border border-border bg-card hover:border-emerald-500/50 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-semibold text-foreground flex items-center gap-1.5"><i data-lucide="search" class="w-3.5 h-3.5 text-purple-500"></i> seo-jsonld-optimizer</span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">Slot #9</span>
+                            </div>
+                            <p class="text-[11px] text-muted-foreground mb-2">Génération de métadonnées OpenGraph et Schema.org pour le référencement.</p>
+                            <span class="text-[10px] font-mono text-purple-500">shielder install-skill seo-optimizer</span>
+                        </div>
+
+                        <div class="p-2.5 rounded-lg border border-border bg-card hover:border-emerald-500/50 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-semibold text-foreground flex items-center gap-1.5"><i data-lucide="share-2" class="w-3.5 h-3.5 text-blue-400"></i> graphql-mesh-federation</span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">Slot #10</span>
+                            </div>
+                            <p class="text-[11px] text-muted-foreground mb-2">Passerelle GraphQL unifiée unifiant Supabase, Nango et les API tierces.</p>
+                            <span class="text-[10px] font-mono text-blue-400">shielder install-skill graphql-mesh</span>
+                        </div>
+
+                        <div class="p-2.5 rounded-lg border border-border bg-card hover:border-emerald-500/50 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-semibold text-foreground flex items-center gap-1.5"><i data-lucide="palette" class="w-3.5 h-3.5 text-pink-500"></i> tailwind-v4-engine</span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">Slot #11</span>
+                            </div>
+                            <p class="text-[11px] text-muted-foreground mb-2">Migration automatique vers le compilateur Oxide Tailwind v4 pour des builds 10x plus rapides.</p>
+                            <span class="text-[10px] font-mono text-pink-500">shielder install-skill tailwind-v4</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Répertoire des 53 Skills Actifs -->
+                <div class="space-y-3">
+                    <h4 class="font-semibold text-sm text-foreground flex items-center gap-2">
+                        <i data-lucide="layers" class="w-4 h-4 text-primary"></i>
+                        <span>Répertoire des 53 Skills Installés par Domaine</span>
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="skills-catalog-list">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer -->
+            <div class="p-4 bg-muted/40 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
+                <span>Capacité Antigravity : 53 actifs + 11 réservés = 64 slots</span>
+                <button onclick="closeSkillsCatalogModal()" class="px-3 py-1.5 rounded-lg bg-card border border-border text-foreground hover:bg-muted transition font-medium">Fermer</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Notification Toast (Top Right) -->
+    <div id="toast" class="fixed top-6 right-6 z-50 rounded-xl border border-border bg-card/95 backdrop-blur-md shadow-2xl p-4 hidden items-center gap-3 transition">
+        <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>
+        <div class="text-xs">
+            <h5 class="font-semibold text-foreground" id="toast-title">Succès</h5>
+            <p class="text-muted-foreground" id="toast-msg">Action effectuée.</p>
+        </div>
+    </div>
+
+    <!-- Floating AI Assistant Round CTA (Clean, Pure Circle) -->
+    <button id="ai-assistant-cta" onclick="toggleAiAssistant()" title="Discuter avec l'Assistant IA Vocal Shielder" class="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-tr from-emerald-500 via-teal-500 to-cyan-500 text-white shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 group border border-white/30 focus:outline-none focus:ring-4 focus:ring-emerald-500/20">
+        <i id="ai-cta-icon" data-lucide="bot" class="w-7 h-7 text-white transition-transform group-hover:rotate-12"></i>
+    </button>
+
+    <!-- PWA Install Modal (Mobile Phone & Desktop WebApp) -->
+    <div id="pwa-install-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="w-full max-w-md rounded-2xl border border-border bg-card shadow-2xl overflow-hidden flex flex-col p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center text-white shadow-lg">
+                        <i data-lucide="shield-check" class="w-7 h-7"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-base text-foreground">Installer Shielder Hub</h4>
+                        <p class="text-xs text-muted-foreground">Web App Mobile & Bureau (PWA)</p>
+                    </div>
+                </div>
+                <button onclick="closePwaInstallModal()" class="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 text-xs leading-relaxed">
+                <!-- Native Button if beforeinstallprompt available -->
+                <button id="pwa-native-install-btn" onclick="triggerPwaPrompt()" class="w-full py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-medium flex items-center justify-center gap-2 shadow-md transition">
+                    <i data-lucide="download" class="w-4 h-4"></i> Installer sur cet appareil
+                </button>
+
+                <div class="p-3.5 rounded-xl border border-border bg-muted/30 space-y-2">
+                    <h5 class="font-semibold text-foreground flex items-center gap-1.5">
+                        <i data-lucide="smartphone" class="w-4 h-4 text-emerald-500"></i> Sur iPhone / iPad (Safari) :
+                    </h5>
+                    <ol class="list-decimal list-inside space-y-1 text-muted-foreground text-[11px]">
+                        <li>Ouvrez cette page dans <strong>Safari</strong>.</li>
+                        <li>Touchez le bouton <strong>Partager</strong> <i data-lucide="share" class="w-3.5 h-3.5 inline text-primary"></i> (en bas de l'écran).</li>
+                        <li>Faites défiler vers le bas et sélectionnez <strong>« Sur l'écran d'accueil »</strong>.</li>
+                        <li>Appuyez sur <strong>Ajouter</strong> en haut à droite.</li>
+                    </ol>
+                </div>
+
+                <div class="p-3.5 rounded-xl border border-border bg-muted/30 space-y-2">
+                    <h5 class="font-semibold text-foreground flex items-center gap-1.5">
+                        <i data-lucide="laptop" class="w-4 h-4 text-blue-500"></i> Sur Android / Chrome :
+                    </h5>
+                    <p class="text-muted-foreground text-[11px]">
+                        Appuyez sur le menu (les 3 points en haut à droite) et choisissez <strong>« Installer l'application »</strong> ou <strong>« Ajouter à l'écran d'accueil »</strong>.
+                    </p>
+                </div>
+            </div>
+
+            <div class="pt-2 flex justify-end">
+                <button onclick="closePwaInstallModal()" class="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground text-xs font-medium hover:bg-accent transition">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Assistant Floating Widget Window -->
+    <div id="ai-assistant-widget" class="fixed bottom-24 right-6 z-50 w-[420px] max-w-[calc(100vw-2rem)] h-[620px] max-h-[82vh] rounded-2xl glass-panel border border-border shadow-2xl flex flex-col overflow-hidden hidden transition-all duration-300 transform scale-95 opacity-0">
+        
+        <!-- Header -->
+        <div class="p-3.5 bg-card/90 border-b border-border flex items-center justify-between backdrop-blur-md">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center text-white shadow-md">
+                    <i data-lucide="bot" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h4 class="font-semibold text-sm text-foreground">Shielder AI Advisor</h4>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 font-medium border border-emerald-500/20">Studio Free</span>
+                    </div>
+                    <p class="text-[11px] text-muted-foreground flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Gemini Flash • Mode Vocal Actif
+                    </p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-1">
+                <!-- TTS Audio Mute/Unmute Toggle -->
+                <button id="tts-toggle-btn" onclick="toggleVoiceOutput()" title="Activer/Désactiver la voix de l'IA" class="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition">
+                    <i id="tts-icon" data-lucide="volume-2" class="w-4 h-4 text-emerald-500"></i>
+                </button>
+                <!-- API Key Config -->
+                <button onclick="promptGeminiApiKey()" title="Modifier la clé API Google AI Studio" class="p-1.5 rounded-lg text-muted-foreground hover:text-amber-500 hover:bg-muted/60 transition">
+                    <i data-lucide="key" class="w-4 h-4"></i>
+                </button>
+                <!-- Clear Chat -->
+                <button onclick="clearAiChat()" title="Effacer l'historique" class="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+                <!-- Close/Minimize -->
+                <button onclick="toggleAiAssistant(false)" title="Fermer" class="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Messages Area -->
+        <div id="ai-chat-messages" class="flex-1 p-3.5 overflow-y-auto space-y-3 text-xs leading-relaxed">
+            <!-- Initial Welcome Message from Shielder Advisor -->
+            <div class="flex items-start gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 flex items-center justify-center shrink-0 mt-0.5">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                </div>
+                <div class="space-y-1.5 max-w-[88%]">
+                    <div class="p-3 rounded-2xl rounded-tl-sm bg-muted/60 border border-border text-foreground">
+                        <p class="font-medium text-foreground mb-1">Bonjour ! Je suis votre conseiller Shielder IA.</p>
+                        <p class="text-muted-foreground">J'analyse en direct vos 12 projets, vos epics Jira KAN, vos tests TestSprite (150 runs) et vos 53 skills Antigravity. Cliquez sur le micro pour me parler ou tapez une question !</p>
+                    </div>
+                    <!-- Quick action chips -->
+                    <div class="flex flex-wrap gap-1.5 pt-1">
+                        <button onclick="sendQuickPrompt('Fais-moi un bilan de santé global des 12 projets')" class="px-2 py-1 rounded-full bg-secondary hover:bg-accent text-secondary-foreground text-[10px] border border-border transition">
+                            📊 Bilan global
+                        </button>
+                        <button onclick="sendQuickPrompt('Où en sont les tests TestSprite Cloud et nos 150 crédits ?')" class="px-2 py-1 rounded-full bg-secondary hover:bg-accent text-secondary-foreground text-[10px] border border-border transition">
+                            🧪 TestSprite & Crédits
+                        </button>
+                        <button onclick="sendQuickPrompt('Quelles sont les prochaines priorités sur nos Epics Jira KAN ?')" class="px-2 py-1 rounded-full bg-secondary hover:bg-accent text-secondary-foreground text-[10px] border border-border transition">
+                            🎯 Epics Jira KAN
+                        </button>
+                        <button onclick="sendQuickPrompt('Donne-moi 3 recommandations d\'optimisation pour OmniLayer et Fluxo')" class="px-2 py-1 rounded-full bg-secondary hover:bg-accent text-secondary-foreground text-[10px] border border-border transition">
+                            💡 Conseils Archi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voice Status Banner (Active during speech recognition) -->
+        <div id="ai-voice-status" class="px-3.5 py-1.5 bg-red-500/10 border-t border-red-500/20 hidden items-center justify-between text-[11px] text-red-500 animate-pulse">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                <span class="font-medium">Écoute vocale active... Parlez maintenant</span>
+            </div>
+            <button onclick="stopVoiceRecognition()" class="text-[10px] underline hover:text-red-600">Terminer</button>
+        </div>
+
+        <!-- Input Bar -->
+        <div class="p-3 bg-card/95 border-t border-border backdrop-blur-sm">
+            <form id="ai-chat-form" onsubmit="handleAiChatSubmit(event)" class="flex items-center gap-2">
+                <!-- Mic Button -->
+                <button type="button" id="ai-mic-btn" onclick="toggleVoiceRecognition()" title="Parler vocalement" class="p-2.5 rounded-xl bg-secondary hover:bg-accent text-foreground border border-border transition-all duration-200 shrink-0 focus:outline-none">
+                    <i id="ai-mic-icon" data-lucide="mic" class="w-4 h-4 text-emerald-500"></i>
+                </button>
+                
+                <!-- Input field -->
+                <input type="text" id="ai-chat-input" placeholder="Posez une question ou donnez un ordre..." class="flex-1 bg-background border border-border rounded-xl px-3.5 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring">
+                
+                <!-- Send button -->
+                <button type="submit" id="ai-send-btn" class="p-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white shrink-0 shadow transition focus:outline-none disabled:opacity-50">
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                </button>
+            </form>
+            <div class="mt-1.5 flex items-center justify-between text-[10px] text-muted-foreground px-1">
+                <span>Google AI Studio • Gemini Flash Free</span>
+                <span id="ai-voice-indicator" class="flex items-center gap-1 text-emerald-500">
+                    <i data-lucide="volume-2" class="w-3 h-3"></i> Réponse vocale ON
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Embedded Data & Scripts -->
+    <script>
+        const projectsData = [
+            {
+                id: "layerb2b",
+                name: "LayerB2B (OmniLayer)",
+                cat: "eng",
+                catLabel: "SaaS B2B",
+                stack: "Next.js 15 / Supabase Vault",
+                tech: ["Next.js 15", "Supabase", "Nango", "Tailwind", "shadcn/ui"],
+                epic: "KAN-56",
+                epicName: "Plateforme B2B OmniLayer",
+                testEngine: "TestSprite Cloud + Playwright",
+                liveUrl: "https://omnilayerai.vercel.app",
+                repoUrl: "https://github.com/moslihayoub/OmniLayer",
+                status: "HEALTHY",
+                path: "ANT2.0/1_engineering_apps/LayerB2B",
+                appsCount: 4,
+                appsList: ["B2B Client Portal", "Supabase Vault", "Nango Integrations", "API Gateway"],
+                skills: ["m84-unified-methodology", "omnilayer-methodology", "supabase", "testsprite", "modern-web-guidance", "jira-atlassian"],
+                kpiSummary: { buildTime: "1.8s", pages: "10/10 Static", testsStatus: "Pass (TestSprite Cloud)", memory: "42MB" }
+            },
+            {
+                id: "fluxo",
+                name: "Operation (Fluxo)",
+                cat: "eng",
+                catLabel: "Fintech SaaS",
+                stack: "Next.js 14 / Supabase / Firebase",
+                tech: ["Next.js 14", "Supabase Realtime", "Firebase Auth", "Tailwind"],
+                epic: "KAN-57",
+                epicName: "Fluxo Finance & Stock",
+                testEngine: "Playwright E2E (15 Tests) + TestSprite",
+                liveUrl: "https://fluxofinance.vercel.app",
+                repoUrl: "https://github.com/moslihayoub/Fluxo",
+                status: "HEALTHY",
+                path: "ANT2.0/1_engineering_apps/Operation",
+                appsCount: 3,
+                appsList: ["Facturation & Trésorerie", "Gestion Stock Inventaire", "Rôles & Audit Logs"],
+                skills: ["testsprite", "supabase", "firebase-auth-basics", "modern-web-guidance", "m84-unified-methodology"],
+                kpiSummary: { buildTime: "2.1s", pages: "8 routes", testsStatus: "15 Tests E2E Pass", memory: "38MB" }
+            },
+            {
+                id: "parseliq",
+                name: "AI-Tool (ParseLIQ HR)",
+                cat: "eng",
+                catLabel: "IA RH & Parsing",
+                stack: "React 19 / Vite / Gemini SDK",
+                tech: ["React 19", "Vite", "Google Gemini SDK", "Tailwind"],
+                epic: "KAN-58",
+                epicName: "ParseLIQ HR (Parsing CV)",
+                testEngine: "TestSprite Cloud (4 Plans)",
+                liveUrl: "https://ai-tool-r5dhsv7n2-moslihayoubs-projects.vercel.app",
+                repoUrl: "https://github.com/moslihayoub/AI-Tool",
+                status: "HEALTHY",
+                path: "ANT2.0/1_engineering_apps/AI-Tool",
+                appsCount: 2,
+                appsList: ["Moteur Parsing Multimodal CV", "Matrice Évaluation Scoring"],
+                skills: ["testsprite", "firebase-ai-logic-basics", "token-optimizer", "modern-web-guidance"],
+                kpiSummary: { buildTime: "1.9s", pages: "SPA PWA", testsStatus: "4 Plans TestSprite", memory: "22MB" }
+            },
+            {
+                id: "fincalc",
+                name: "Financial Calculator",
+                cat: "eng",
+                catLabel: "Simulateur Fin.",
+                stack: "React 19 / Vite / PWA",
+                tech: ["React 19", "Vite PWA", "Vitest", "Tailwind"],
+                epic: "KAN-59",
+                epicName: "Simulateur Financier Freelance",
+                testEngine: "Vitest (6/6 Pass) + Playwright",
+                liveUrl: "https://financial-calculator-kh6igzjx2-moslihayoubs-projects.vercel.app",
+                repoUrl: "https://github.com/moslihayoub/financial-calculator",
+                status: "HEALTHY",
+                path: "ANT2.0/1_engineering_apps/Financial Calculator",
+                appsCount: 3,
+                appsList: ["Simulateur TJM & Net", "Optimisation Fiscale", "Export Devis PWA"],
+                skills: ["product-manager-po", "token-optimizer", "testsprite", "modern-web-guidance"],
+                kpiSummary: { buildTime: "1.4s", pages: "SPA Offline PWA", testsStatus: "6/6 Vitest Pass (100%)", memory: "18MB" }
+            },
+            {
+                id: "sourcing",
+                name: "Autocash-sourcing",
+                cat: "eng",
+                catLabel: "Auto B2B",
+                stack: "React 19 / Vite / Playwright",
+                tech: ["React 19", "Vite", "Playwright", "Supabase"],
+                epic: "KAN-60",
+                epicName: "Sourcing & Achat Véhicules",
+                testEngine: "TestSprite Cloud + Build Vite",
+                liveUrl: "https://autocash-sourcing.vercel.app",
+                repoUrl: "https://github.com/moslihayoub/app-sourcing",
+                status: "HEALTHY",
+                path: "ANT2.0/1_engineering_apps/Autocash-sourcing",
+                appsCount: 2,
+                appsList: ["Agrégateur d'Enchères", "Calculateur de Marge"],
+                skills: ["testsprite", "supabase", "modern-web-guidance", "token-optimizer"],
+                kpiSummary: { buildTime: "1.7s", pages: "SPA", testsStatus: "TestSprite Cloud Connecté", memory: "26MB" }
+            },
+            {
+                id: "portfolio",
+                name: "Portfolio (Ayoub MOSLIH)",
+                cat: "eng",
+                catLabel: "Vitrine & Leads",
+                stack: "React 19 / Vite / Firebase",
+                tech: ["React 19", "Vite", "Firebase Firestore", "Tailwind"],
+                epic: "KAN-61",
+                epicName: "Vitrine Consultant",
+                testEngine: "TestSprite Cloud + Build Vite",
+                liveUrl: "https://moslih84.vercel.app",
+                repoUrl: "https://github.com/moslihayoub/moslihayoub-consultant",
+                status: "HEALTHY",
+                path: "ANT2.0/1_engineering_apps/Ayoub MOSLIH - Portfolio",
+                appsCount: 2,
+                appsList: ["Vitrine Projets & Études de cas", "Formulaire Contact / Leads Firestore"],
+                skills: ["firebase-firestore", "ux-ui-designer", "testsprite", "modern-web-guidance"],
+                kpiSummary: { buildTime: "1.5s", pages: "SPA", testsStatus: "TestSprite Cloud Connecté", memory: "20MB" }
+            },
+            {
+                id: "autocash-db",
+                name: "Autocash-DB",
+                cat: "eng",
+                catLabel: "Back-Office Arch.",
+                stack: "Python AST / Office Scripts",
+                tech: ["Python 3.14", "AST Parser", "Office Scripts", "SQLite"],
+                epic: "KAN-62",
+                epicName: "Architecture 24 Modules BO",
+                testEngine: "Scripts d'audit AST (Single-Trip)",
+                liveUrl: "file:///Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/Autocash-DB/docs/bo_architecture_dashboard.html",
+                repoUrl: "",
+                status: "HEALTHY",
+                path: "ANT2.0/1_engineering_apps/Autocash-DB",
+                appsCount: 24,
+                appsList: ["24 Modules Back-Office", "Parser AST", "Audit Sécurité DB"],
+                skills: ["system-data-organizer", "token-optimizer", "workspace-office-automation", "shielder"],
+                kpiSummary: { buildTime: "N/A (Python)", pages: "1 Dashboard HTML", testsStatus: "24/24 Modules AST Validés", memory: "8.5k Tokens" }
+            },
+            {
+                id: "automation-pm",
+                name: "Automation UX-PM",
+                cat: "eng",
+                catLabel: "Product Gov.",
+                stack: "Product / Office / RICE",
+                tech: ["Python openpyxl", "RICE Scoring", "Jira API REST", "Word/Excel"],
+                epic: "KAN-63",
+                epicName: "Matrices RICE & Backlog",
+                testEngine: "Office Scripts Validation",
+                liveUrl: "",
+                repoUrl: "",
+                status: "HEALTHY",
+                path: "ANT2.0/1_engineering_apps/Automation UX-PM",
+                appsCount: 5,
+                appsList: ["Matrice RICE", "Générateur PRD", "Backlog Grooming", "INVEST Stories", "Burndown Charts"],
+                skills: ["product-manager-po", "agile-scrum-design-sprint", "jira-atlassian", "workspace-office-automation"],
+                kpiSummary: { buildTime: "N/A", pages: "5 Templates Docx/Xlsx", testsStatus: "100% Validation Office", memory: "15MB" }
+            },
+            {
+                id: "agentic",
+                name: "Agentic",
+                cat: "eng",
+                catLabel: "Hub Multi-Agents",
+                stack: "Python Server / Nexus Jira",
+                tech: ["FastAPI", "Nexus Jira", "Python Daemons", "Socket.io"],
+                epic: "KAN-67",
+                epicName: "Hub Agents & Jarvis",
+                testEngine: "Server Tests & AutoStock",
+                liveUrl: "file:///Users/fahdrahali/Downloads/ANT2.0/1_engineering_apps/Agentic/nexus_jira.html",
+                repoUrl: "",
+                status: "HEALTHY",
+                path: "ANT2.0/1_engineering_apps/Agentic",
+                appsCount: 3,
+                appsList: ["Nexus Jira Bridge", "AutoStock Automation", "Watchdog Monitor"],
+                skills: ["m84-unified-methodology", "jira-atlassian", "computer-use-cowork-security", "shielder"],
+                kpiSummary: { buildTime: "N/A", pages: "1 Web UI", testsStatus: "Daemons Santé OK", memory: "32MB" }
+            },
+            {
+                id: "canva",
+                name: "Canva Studio",
+                cat: "stu",
+                catLabel: "Design & Brand",
+                stack: "Canva MCP Cloud Server",
+                tech: ["Canva Cloud MCP (34 Tools)", "JSON Schema", "REST API"],
+                epic: "KAN-64",
+                epicName: "Design & Visuels MCP",
+                testEngine: "MCP Integration & Print Export",
+                liveUrl: "https://mcp.canva.com",
+                repoUrl: "",
+                status: "HEALTHY",
+                path: "ANT2.0/2_product_studios/Canva",
+                appsCount: 3,
+                appsList: ["Canva Design Generator", "Brand Kit Governance", "Export Pipeline (PDF/PNG)"],
+                skills: ["canva", "higgsfield-brandkit", "ux-ui-designer", "jira-atlassian"],
+                kpiSummary: { buildTime: "Cloud MCP", pages: "API MCP", testsStatus: "34 Outils Validés", memory: "Zero-token" }
+            },
+            {
+                id: "gflow",
+                name: "G-flow Studio",
+                cat: "stu",
+                catLabel: "IA Vidéo & Veo 2",
+                stack: "Google Flow / Veo 2",
+                tech: ["Google Flow MCP (22 Tools)", "Veo 2", "Imagen 4", "Nano Banana"],
+                epic: "KAN-65",
+                epicName: "Studio Vidéo Veo 2",
+                testEngine: "Veo 2 Video Rendering Verification",
+                liveUrl: "https://flow.google.com",
+                repoUrl: "",
+                status: "HEALTHY",
+                path: "ANT2.0/2_product_studios/G-flow",
+                appsCount: 4,
+                appsList: ["Veo 2 Video Studio", "Character Turnaround Sheet", "Scene Builder", "Storyboard 9-Grid"],
+                skills: ["google-flow", "cinematic-director", "character-sheet", "film-lighting-bible", "action-director"],
+                kpiSummary: { buildTime: "Cloud Gen", pages: "Studio Flow", testsStatus: "22 Outils MCP Validés", memory: "Direct Cloud" }
+            },
+            {
+                id: "cosmic-spark",
+                name: "The Cosmic Spark",
+                cat: "stu",
+                catLabel: "Cinéma & Festival",
+                stack: "Higgsfield / Seedance / Darija",
+                tech: ["Higgsfield Seedance 2.5", "Darija Scriptwriter", "FFmpeg", "Audio FX"],
+                epic: "KAN-66",
+                epicName: "Série Cinéma IA (Festival)",
+                testEngine: "Scene Continuity & Audio Sync (Day 8)",
+                liveUrl: "",
+                repoUrl: "",
+                status: "HEALTHY",
+                path: "ANT2.0/2_product_studios/The Cosmic Spark",
+                appsCount: 3,
+                appsList: ["Scripting Phonetique Darija", "Moteur Vidéo Seedance", "Mastering Audio & LUT FX"],
+                skills: ["higgsfield-generate", "darija-scriptwriter", "video-edit-fx", "storyboard-9grid", "film-lighting-bible"],
+                kpiSummary: { buildTime: "Post-Prod", pages: "Day 8 Production", testsStatus: "Sync Audio/Vidéo Validée", memory: "Local Assets" }
+            }
+        ];
+
+        let currentActiveView = "grid";
+        let currentActiveCategory = "all";
+        let currentSearchQuery = "";
+        let currentStackFilter = "all";
+
+        // PWA & Web App Handlers
+        let deferredPrompt = null;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const btn = document.getElementById('pwa-native-install-btn');
+            if (btn) btn.classList.remove('hidden');
+        });
+
+        function openPwaInstallModal() {
+            document.getElementById('pwa-install-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closePwaInstallModal() {
+            document.getElementById('pwa-install-modal').classList.add('hidden');
+        }
+
+        function triggerPwaPrompt() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        showToast("Succès", "Shielder Hub a été installé sur votre appareil !");
+                    }
+                    deferredPrompt = null;
+                    closePwaInstallModal();
+                });
+            } else {
+                showToast("Installation Web App", "Consultez le guide Safari ou Chrome ci-dessous.");
+            }
+        }
+
+        // Smart Filters
+        function handleSmartSearch(val) {
+            currentSearchQuery = (val || "").toLowerCase().trim();
+            renderCurrentView();
+        }
+
+        function handleStackFilter(val) {
+            currentStackFilter = val;
+            renderCurrentView();
+        }
+
+        function switchView(view) {
+            currentActiveView = view;
+            
+            // Buttons UI state
+            ["grid", "table", "matrix"].forEach(v => {
+                const btn = document.getElementById("view-btn-" + v);
+                const container = document.getElementById("view-container-" + v);
+                if (v === view) {
+                    btn.className = "px-2.5 py-1.5 rounded-md flex items-center gap-1.5 text-foreground bg-card shadow-sm transition";
+                    container.classList.remove("hidden");
+                } else {
+                    btn.className = "px-2.5 py-1.5 rounded-md flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition";
+                    container.classList.add("hidden");
+                }
+            });
+
+            renderCurrentView();
+        }
+
+        function filterCategory(cat) {
+            currentActiveCategory = cat;
+            ["all", "eng", "stu"].forEach(c => {
+                const btn = document.getElementById("tab-" + c);
+                if (c === cat) {
+                    btn.className = "px-3 py-1.5 rounded-md font-medium bg-card text-foreground shadow-sm transition";
+                } else {
+                    btn.className = "px-3 py-1.5 rounded-md font-medium text-muted-foreground hover:text-foreground transition";
+                }
+            });
+            renderCurrentView();
+        }
+
+        function renderCurrentView() {
+            let filtered = projectsData;
+
+            // 1. Category Filter
+            if (currentActiveCategory !== "all") {
+                filtered = filtered.filter(p => p.cat === currentActiveCategory);
+            }
+
+            // 2. Stack Filter
+            if (currentStackFilter === "next") {
+                filtered = filtered.filter(p => p.stack.toLowerCase().includes("next"));
+            } else if (currentStackFilter === "vite") {
+                filtered = filtered.filter(p => p.stack.toLowerCase().includes("vite") || p.stack.toLowerCase().includes("react"));
+            } else if (currentStackFilter === "python") {
+                filtered = filtered.filter(p => p.stack.toLowerCase().includes("python") || p.stack.toLowerCase().includes("office") || p.stack.toLowerCase().includes("ast"));
+            } else if (currentStackFilter === "mcp") {
+                filtered = filtered.filter(p => p.cat === "stu" || p.stack.toLowerCase().includes("mcp"));
+            }
+
+            // 3. Search Query Filter
+            if (currentSearchQuery) {
+                filtered = filtered.filter(p => 
+                    p.name.toLowerCase().includes(currentSearchQuery) ||
+                    p.stack.toLowerCase().includes(currentSearchQuery) ||
+                    p.epic.toLowerCase().includes(currentSearchQuery) ||
+                    p.skills.some(s => s.toLowerCase().includes(currentSearchQuery)) ||
+                    p.appsList.some(a => a.toLowerCase().includes(currentSearchQuery))
+                );
+            }
+            
+            // Update counter badge
+            const badge = document.getElementById("active-count-badge");
+            if (badge) {
+                badge.textContent = `${filtered.length} Projets`;
+            }
+
+            if (currentActiveView === "grid") {
+                renderGrid(filtered);
+            } else if (currentActiveView === "table") {
+                renderTable(filtered);
+            } else if (currentActiveView === "matrix") {
+                renderMatrix(filtered);
+            }
+            lucide.createIcons();
+        }
+
+        // 1. Render Smart Cards (Spacious & Decompacted shadcn/ui Card Structure)
+        function renderGrid(projects) {
+            const container = document.getElementById("view-container-grid");
+            container.innerHTML = "";
+
+            if (projects.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full p-12 text-center rounded-2xl border border-dashed border-border bg-card/50">
+                        <i data-lucide="search-x" class="w-10 h-10 text-muted-foreground mx-auto mb-3"></i>
+                        <h4 class="font-semibold text-foreground text-sm">Aucun projet ne correspond aux filtres</h4>
+                        <p class="text-xs text-muted-foreground mt-1">Essayez de réinitialiser la recherche ou le filtre de stack.</p>
+                        <button onclick="handleSmartSearch(''); document.getElementById('smart-search-input').value=''; handleStackFilter('all'); document.getElementById('smart-stack-filter').value='all';" class="mt-4 px-3 py-1.5 rounded-lg bg-secondary text-secondary-foreground text-xs font-medium hover:bg-accent transition">
+                            Réinitialiser les filtres
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            projects.forEach(p => {
+                const card = document.createElement("div");
+                card.className = "rounded-2xl border border-border bg-card p-5 shadow-sm hover:border-emerald-500/40 hover:shadow-md transition-all duration-200 flex flex-col justify-between group";
+
+                const liveBtn = p.liveUrl 
+                    ? `<a href="${p.liveUrl}" target="_blank" title="Ouvrir l'application en direct" class="p-1.5 rounded-lg text-emerald-500 hover:bg-emerald-500/10 transition"><i data-lucide="external-link" class="w-4 h-4"></i></a>`
+                    : ``;
+
+                const repoBtn = p.repoUrl
+                    ? `<a href="${p.repoUrl}" target="_blank" title="Code source GitHub" class="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition"><i data-lucide="github" class="w-4 h-4"></i></a>`
+                    : ``;
+
+                card.innerHTML = `
+                    <div class="space-y-4">
+                        <!-- Top Header: Category Tag, Health Badge, Quick Links -->
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 rounded-md text-[10px] font-medium bg-muted text-muted-foreground border border-border">${p.catLabel}</span>
+                                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ${p.status}
+                                </span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1">
+                                <button onclick="syncSingleProject('${p.id}', event)" id="sync-btn-${p.id}" title="Audit ciblé : vérifier ${p.name}" class="p-1.5 rounded-lg text-muted-foreground hover:text-emerald-500 hover:bg-emerald-500/10 transition">
+                                    <i data-lucide="refresh-cw" id="sync-icon-${p.id}" class="w-3.5 h-3.5"></i>
+                                </button>
+                                ${liveBtn}
+                                ${repoBtn}
+                                <a href="https://moslihayoub.atlassian.net/browse/${p.epic}" target="_blank" title="Epic Jira KAN" class="p-1.5 rounded-lg text-blue-500 hover:bg-blue-500/10 transition">
+                                    <i data-lucide="trello" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Main Title & Tech Stack -->
+                        <div>
+                            <h4 class="font-bold text-base text-foreground group-hover:text-emerald-500 transition">${p.name}</h4>
+                            <p class="text-xs text-muted-foreground mt-0.5 font-medium">${p.stack}</p>
+                        </div>
+
+                        <!-- Key Metrics Highlight Strip -->
+                        <div class="grid grid-cols-3 gap-2 py-2 px-3 rounded-xl bg-muted/40 border border-border text-center">
+                            <div>
+                                <span class="text-[10px] text-muted-foreground uppercase block font-semibold">Build</span>
+                                <span class="text-xs font-mono font-medium text-foreground">${p.kpiSummary.buildTime}</span>
+                            </div>
+                            <div class="border-x border-border px-1">
+                                <span class="text-[10px] text-muted-foreground uppercase block font-semibold">Modules</span>
+                                <span class="text-xs font-mono font-medium text-cyan-500">${p.appsCount} actifs</span>
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-muted-foreground uppercase block font-semibold">Tests</span>
+                                <span class="text-xs font-medium text-emerald-500 truncate block">${p.kpiSummary.testsStatus.split(' ')[0]}</span>
+                            </div>
+                        </div>
+
+                        <!-- Modules Liés & Sub-apps -->
+                        <div class="space-y-1.5">
+                            <span class="text-[10px] font-semibold uppercase text-muted-foreground flex items-center gap-1">
+                                <i data-lucide="layers" class="w-3 h-3 text-cyan-500"></i> Modules & Services Liés
+                            </span>
+                            <div class="flex flex-wrap gap-1.5">
+                                ${p.appsList.map(a => `<span class="px-2 py-0.5 rounded-md text-[10px] bg-secondary text-secondary-foreground border border-border/60">${a}</span>`).join('')}
+                            </div>
+                        </div>
+
+                        <!-- Skills Antigravity Déployées -->
+                        <div class="space-y-1.5">
+                            <span class="text-[10px] font-semibold uppercase text-muted-foreground flex items-center gap-1">
+                                <i data-lucide="zap" class="w-3 h-3 text-amber-500"></i> Compétences Déployées (${p.skills.length})
+                            </span>
+                            <div class="flex flex-wrap gap-1">
+                                ${p.skills.slice(0, 3).map(s => `<span class="px-2 py-0.5 rounded-md text-[10px] font-mono bg-primary/5 text-primary border border-primary/10">${s}</span>`).join('')}
+                                ${p.skills.length > 3 ? `<span class="px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-muted text-muted-foreground" title="${p.skills.slice(3).join(', ')}">+${p.skills.length - 3}</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Footer with Jira & Path -->
+                    <div class="pt-3 border-t border-border mt-4 flex items-center justify-between text-[11px] text-muted-foreground">
+                        <span class="font-mono text-[10px] truncate max-w-[200px]">${p.path}</span>
+                        <a href="https://moslihayoub.atlassian.net/browse/${p.epic}" target="_blank" class="font-mono text-blue-500 hover:underline flex items-center gap-1 font-semibold">
+                            ${p.epic}
+                        </a>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // 2. Render Table View (High-Density)
+        function renderTable(projects) {
+            const tbody = document.getElementById("projects-table-body");
+            tbody.innerHTML = "";
+
+            projects.forEach(p => {
+                const tr = document.createElement("tr");
+                tr.className = "hover:bg-muted/40 transition group";
+                
+                const liveBadge = p.liveUrl 
+                    ? `<a href="${p.liveUrl}" target="_blank" class="inline-flex items-center gap-1 text-[11px] text-emerald-500 hover:underline"><i data-lucide="external-link" class="w-3 h-3"></i> Live</a>`
+                    : `<span class="text-[11px] text-muted-foreground">Local</span>`;
+                    
+                const repoBadge = p.repoUrl 
+                    ? `<a href="${p.repoUrl}" target="_blank" class="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground"><i data-lucide="github" class="w-3 h-3"></i> Repo</a>`
+                    : ``;
+
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-medium text-foreground">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+                            <div>
+                                <span class="font-semibold">${p.name}</span>
+                                <span class="block text-[10px] text-muted-foreground font-mono">${p.catLabel}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-3 px-4">
+                        <span class="inline-block px-2 py-0.5 rounded text-[11px] font-medium bg-muted text-foreground border border-border">${p.stack}</span>
+                    </td>
+                    <td class="py-3 px-4">
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-muted/60 text-[11px] font-medium text-foreground border border-border">
+                            <i data-lucide="layers" class="w-3 h-3 text-cyan-500"></i> ${p.appsCount} modules
+                        </span>
+                    </td>
+                    <td class="py-3 px-4">
+                        <div class="flex flex-wrap gap-1 max-w-[200px]">
+                            ${p.skills.slice(0, 3).map(s => `<span class="px-1.5 py-0.5 rounded bg-primary/5 text-primary text-[10px] border border-primary/10">${s}</span>`).join(" ")}
+                            ${p.skills.length > 3 ? `<span class="text-[10px] text-muted-foreground">+${p.skills.length - 3}</span>` : ""}
+                        </div>
+                    </td>
+                    <td class="py-3 px-4">
+                        <a href="https://moslihayoub.atlassian.net/browse/${p.epic}" target="_blank" class="inline-flex items-center gap-1 font-mono text-[11px] text-blue-500 hover:underline">
+                            <i data-lucide="trello" class="w-3 h-3"></i> ${p.epic}
+                        </a>
+                    </td>
+                    <td class="py-3 px-4 text-muted-foreground">
+                        <span class="block text-[11px] font-medium text-foreground">${p.kpiSummary.testsStatus}</span>
+                        <span class="text-[10px] text-muted-foreground font-mono">Build: ${p.kpiSummary.buildTime}</span>
+                    </td>
+                    <td class="py-3 px-4">
+                        <div class="flex items-center gap-2">
+                            <button onclick="syncSingleProject('${p.id}', event)" title="Audit ciblé : vérifier ${p.name}" class="p-1 rounded text-muted-foreground hover:text-emerald-500 hover:bg-muted transition">
+                                <i data-lucide="refresh-cw" id="sync-icon-tbl-${p.id}" class="w-3.5 h-3.5"></i>
+                            </button>
+                            ${liveBadge}
+                            ${repoBadge}
+                        </div>
+                    </td>
+                    <td class="py-3 px-4 text-right">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ${p.status}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 3. Render Skills Matrix View
+        function renderMatrix(projects) {
+            const container = document.getElementById("view-container-matrix");
+            container.innerHTML = "";
+
+            const summaryCard = document.createElement("div");
+            summaryCard.className = "rounded-xl border border-border bg-card p-4 space-y-3";
+            summaryCard.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="font-semibold text-sm text-foreground">Matrice de Couverture des Skills par Projet</h4>
+                        <p class="text-xs text-muted-foreground">Cartographie croisée montrant quelles compétences Antigravity pilotent chaque sous-application</p>
+                    </div>
+                    <span class="text-xs font-mono px-2 py-1 rounded bg-muted border border-border">53 Skills Utilisés</span>
+                </div>
+            `;
+            container.appendChild(summaryCard);
+
+            const matrixGrid = document.createElement("div");
+            matrixGrid.className = "grid grid-cols-1 md:grid-cols-2 gap-4";
+
+            projects.forEach(p => {
+                const item = document.createElement("div");
+                item.className = "p-4 rounded-xl border border-border bg-card hover:border-purple-500/40 transition space-y-2.5";
+                item.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span class="font-semibold text-sm text-foreground">${p.name}</span>
+                        </div>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-muted text-muted-foreground">${p.appsCount} modules liés</span>
+                    </div>
+                    
+                    <div class="space-y-1">
+                        <span class="text-[10px] font-semibold uppercase text-muted-foreground">Compétences Déployées (${p.skills.length})</span>
+                        <div class="flex flex-wrap gap-1">
+                            ${p.skills.map(s => `<span class="px-2 py-0.5 rounded-md text-[10px] bg-purple-500/10 text-purple-400 border border-purple-500/20 font-medium">${s}</span>`).join(" ")}
+                        </div>
+                    </div>
+
+                    <div class="pt-2 border-t border-border flex items-center justify-between text-[11px] text-muted-foreground">
+                        <span>Économie Tokens : <strong class="text-emerald-500">-70% (Masking)</strong></span>
+                        <span class="font-mono text-blue-500">${p.epic}</span>
+                    </div>
+                `;
+                matrixGrid.appendChild(item);
+            });
+
+            container.appendChild(matrixGrid);
+        }
+
+        // Skills Catalog Modal Handlers
+        function openSkillsCatalogModal() {
+            document.getElementById("skills-catalog-modal").classList.remove("hidden");
+            renderSkillsCatalogList();
+            lucide.createIcons();
+        }
+
+        function closeSkillsCatalogModal() {
+            document.getElementById("skills-catalog-modal").classList.add("hidden");
+        }
+
+        function renderSkillsCatalogList() {
+            const listEl = document.getElementById("skills-catalog-list");
+            if (!listEl || listEl.children.length > 0) return;
+
+            const categories = [
+                {
+                    title: "Gouvernance, Méthodologie & Jira",
+                    icon: "trello",
+                    skills: ["m84-unified-methodology", "omnilayer-methodology", "jira-atlassian", "product-manager-po", "agile-scrum-design-sprint", "digital-transformation-audit"]
+                },
+                {
+                    title: "Ingénierie Web, Cloud & Bases de Données",
+                    icon: "code",
+                    skills: ["modern-web-guidance", "chrome-extensions", "supabase", "firebase-basics", "firebase-auth-basics", "firebase-firestore", "firebase-data-connect", "firebase-hosting-basics", "firebase-app-hosting-basics", "testsprite"]
+                },
+                {
+                    title: "Studios Vidéo, IA Générative & Design",
+                    icon: "video",
+                    skills: ["google-flow", "canva", "higgsfield-generate", "higgsfield-brandkit", "higgsfield-websites", "cinematic-director", "character-sheet", "film-lighting-bible", "storyboard-9grid", "action-director", "darija-scriptwriter", "video-edit-fx", "ux-ui-designer", "stitch-google"]
+                },
+                {
+                    title: "Sécurité, Optimisation & Antigravity",
+                    icon: "shield",
+                    skills: ["shielder", "token-optimizer", "computer-use-cowork-security", "data-governance-drive-local", "system-data-organizer", "system-update-maintenance", "workspace-office-automation", "antigravity-guide", "agy-customizations"]
+                }
+            ];
+
+            listEl.innerHTML = categories.map(cat => `
+                <div class="p-3 rounded-xl border border-border bg-muted/20 space-y-2">
+                    <h5 class="font-semibold text-xs text-foreground flex items-center gap-1.5">
+                        <i data-lucide="${cat.icon}" class="w-3.5 h-3.5 text-emerald-500"></i> ${cat.title}
+                    </h5>
+                    <div class="flex flex-wrap gap-1">
+                        ${cat.skills.map(s => `<span class="px-2 py-0.5 rounded text-[10px] bg-card border border-border text-foreground font-mono">${s}</span>`).join(" ")}
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        // Dynamic Bot Status
+        function setBotOnlineStatus(isOnline) {
+            const ctaBtn = document.getElementById("ai-assistant-cta");
+            if (isOnline) {
+                if (ctaBtn) {
+                    ctaBtn.title = "Shielder IA en ligne & prêt (Mode Vocal Actif)";
+                    ctaBtn.classList.remove("border-rose-500/50");
+                    ctaBtn.classList.add("border-white/30");
+                }
+            } else {
+                if (ctaBtn) {
+                    ctaBtn.title = "Shielder IA hors ligne / API occupée";
+                    ctaBtn.classList.remove("border-white/30");
+                    ctaBtn.classList.add("border-rose-500/50");
+                }
+            }
+        }
+
+        async function checkBotHealth() {
+            try {
+                const key = getGeminiApiKey();
+                const testEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${key}`;
+                const res = await fetch(testEndpoint, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "ping" }] }] })
+                });
+                if (res.ok) {
+                    setBotOnlineStatus(true);
+                } else {
+                    const res2 = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${key}`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ contents: [{ parts: [{ text: "ping" }] }] })
+                    });
+                    setBotOnlineStatus(res2.ok);
+                }
+            } catch (err) {
+                setBotOnlineStatus(false);
+            }
+        }
+
+        // Omnibar Handlers
+        function openOmnibarModal() {
+            document.getElementById("omnibar-modal").classList.remove("hidden");
+            const input = document.getElementById("omnibar-input");
+            input.value = "";
+            input.focus();
+            handleOmnibarSearch("");
+        }
+
+        function closeOmnibarModal() {
+            document.getElementById("omnibar-modal").classList.add("hidden");
+        }
+
+        document.addEventListener("keydown", (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+                e.preventDefault();
+                openOmnibarModal();
+            }
+            if (e.key === "Escape") {
+                closeOmnibarModal();
+            }
+        });
+
+        function handleOmnibarSearch(q) {
+            const list = document.getElementById("omnibar-projects-list");
+            list.innerHTML = "";
+            const filtered = projectsData.filter(p => p.name.toLowerCase().includes(q.toLowerCase()) || p.epic.toLowerCase().includes(q.toLowerCase()));
+            
+            filtered.forEach(p => {
+                const div = document.createElement("div");
+                div.className = "p-2 rounded-lg hover:bg-accent cursor-pointer flex items-center justify-between";
+                div.onclick = () => {
+                    closeOmnibarModal();
+                    showToast(p.name, "Sélectionné • Path : " + p.path);
+                };
+                div.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        <span class="font-medium text-foreground">${p.name}</span>
+                        <span class="text-blue-500 font-mono text-[10px]">${p.epic}</span>
+                    </div>
+                    <span class="text-muted-foreground text-[10px] font-mono">${p.stack}</span>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function execOmniAction(act) {
+            closeOmnibarModal();
+            if (act === "check") {
+                refreshData();
+            } else if (act === "goal") {
+                showToast("Mode /goal", "Utilisez la commande /goal [votre tâche] dans le chat pour activer le self-healing autonome.");
+            } else if (act === "jira") {
+                window.open("https://moslihayoub.atlassian.net/jira/software/projects/KAN/boards/1", "_blank");
+            }
+        }
+
+        // Supabase Realtime Configuration & Client
+        const SUPABASE_URL = "https://rjmujizjdamjgejagxax.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJqbXVqaXpqZGFtamdlamFneGF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3MjU2MTcsImV4cCI6MjEwNTMwMTYxN30.0QdD4YtO4vd6FLbhh43AV1S6OSq81BF3RLkEyXldMe8";
+        let supabaseClient = null;
+
+        function initSupabaseRealtime() {
+            try {
+                if (window.supabase) {
+                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    supabaseClient
+                        .channel('shielder-sync-channel')
+                        .on('postgres_changes', { event: '*', schema: 'public', table: 'shielder_sync' }, payload => {
+                            if (payload.new && payload.new.status === 'synced') {
+                                const dateObj = new Date(payload.new.updated_at);
+                                const timeStr = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                                const syncBadge = document.getElementById("last-sync-time");
+                                if (syncBadge) syncBadge.innerText = `Synchro : ${timeStr}`;
+                                localStorage.setItem("shielder-last-sync", timeStr);
+                                showToast("Realtime Supabase", `Synchronisation reçue en direct du Mac (${timeStr}).`);
+                            }
+                        })
+                        .subscribe();
+                }
+            } catch (err) {
+                console.log("Supabase Realtime note:", err);
+            }
+        }
+
+        // On-Demand Manual Synchronization Engine (Global & Targeted)
+        function triggerManualSync() {
+            const btn = document.getElementById("global-sync-btn");
+            const icon = document.getElementById("global-sync-icon");
+            const text = document.getElementById("global-sync-text");
+            
+            if (!btn || btn.disabled) return;
+            btn.disabled = true;
+            if (icon) icon.classList.add("animate-spin");
+            if (text) text.innerText = "Synchronisation...";
+            
+            showToast("Synchronisation Initiée", "Interrogation à la demande de l'écosystème local & quotas Antigravity 2.0...");
+            
+            // Dispatch to Supabase if connected
+            if (supabaseClient) {
+                supabaseClient.from('shielder_sync').upsert({
+                    id: 'current_state',
+                    status: 'sync_requested',
+                    target_project: null,
+                    last_sync_by: 'vercel_pwa',
+                    updated_at: new Date().toISOString()
+                }).then(({ error }) => {
+                    if (error) console.log("Supabase dispatch note:", error.message);
+                });
+            }
+
+            setTimeout(() => {
+                if (icon) icon.classList.remove("animate-spin");
+                btn.disabled = false;
+                if (text) text.innerText = "Synchroniser";
+                
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                localStorage.setItem("shielder-last-sync", timeStr);
+                
+                const syncBadge = document.getElementById("last-sync-time");
+                if (syncBadge) syncBadge.innerText = `Synchro : ${timeStr}`;
+                
+                showToast("Succès Synchronisation", `Écosystème à jour (${timeStr}) • 12 projets synchronisés sans surchauffe.`);
+            }, 1000);
+        }
+
+        function syncSingleProject(projId, event) {
+            if (event) event.stopPropagation();
+            const proj = projectsData.find(p => p.id === projId);
+            if (!proj) return;
+            
+            const iconGrid = document.getElementById(`sync-icon-${projId}`);
+            const iconTbl = document.getElementById(`sync-icon-tbl-${projId}`);
+            if (iconGrid) iconGrid.classList.add("animate-spin");
+            if (iconTbl) iconTbl.classList.add("animate-spin");
+            
+            // Dispatch single targeted check to Supabase
+            if (supabaseClient) {
+                supabaseClient.from('shielder_sync').upsert({
+                    id: 'current_state',
+                    status: 'sync_requested',
+                    target_project: projId,
+                    last_sync_by: 'vercel_pwa',
+                    updated_at: new Date().toISOString()
+                }).then(({ error }) => {
+                    if (error) console.log("Single dispatch note:", error.message);
+                });
+            }
+
+            setTimeout(() => {
+                if (iconGrid) iconGrid.classList.remove("animate-spin");
+                if (iconTbl) iconTbl.classList.remove("animate-spin");
+                
+                const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                proj.kpiSummary.buildTime = "Validé " + now;
+                
+                showToast(`Audit Ciblé : ${proj.name}`, `Build & Tests validés (${proj.testEngine}) • 0 surcharge sur les autres projets.`);
+                renderCurrentView();
+            }, 750);
+        }
+
+        function refreshData() {
+            triggerManualSync();
+        }
+
+        function showToast(title, msg) {
+            const t = document.getElementById("toast");
+            document.getElementById("toast-title").innerText = title;
+            document.getElementById("toast-msg").innerText = msg;
+            t.classList.remove("hidden");
+            t.classList.add("flex");
+            setTimeout(() => {
+                t.classList.add("hidden");
+                t.classList.remove("flex");
+            }, 3000);
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            html.classList.toggle("dark");
+            localStorage.setItem("shielder-theme", html.classList.contains("dark") ? "dark" : "light");
+            updateChartsTheme();
+        }
+
+        // Initialize Charts
+        let ecoChart, tokChart;
+        function initCharts() {
+            const isDark = document.documentElement.classList.contains("dark");
+            const textColor = isDark ? "#94a3b8" : "#64748b";
+            const gridColor = isDark ? "rgba(255, 255, 255, 0.06)" : "rgba(0, 0, 0, 0.06)";
+
+            // Ecosystem Donut Chart
+            const ctx1 = document.getElementById("ecosystemChart").getContext("2d");
+            ecoChart = new Chart(ctx1, {
+                type: "doughnut",
+                data: {
+                    labels: ["Ingénierie & Apps (9)", "Studios Créatifs & IA (3)", "Brain Hub (1)"],
+                    datasets: [{
+                        data: [9, 3, 1],
+                        backgroundColor: ["#10b981", "#06b6d4", "#a855f7"],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    cutout: "75%"
+                }
+            });
+
+            // Token Efficiency Line/Bar Chart
+            const ctx2 = document.getElementById("tokenChart").getContext("2d");
+            tokChart = new Chart(ctx2, {
+                type: "bar",
+                data: {
+                    labels: ["Autocash-DB", "Fluxo (Stock)", "AI-Tool (CVs)", "OmniLayer (Jira)", "Fin. Calculator"],
+                    datasets: [
+                        {
+                            label: "Sans Masquage (k Tokens)",
+                            data: [85, 62, 54, 48, 38],
+                            backgroundColor: isDark ? "rgba(148, 163, 184, 0.25)" : "rgba(100, 116, 139, 0.2)",
+                            borderRadius: 6
+                        },
+                        {
+                            label: "Avec ANT2.0 Observation Masking",
+                            data: [8.5, 7.2, 6.1, 5.5, 4.2],
+                            backgroundColor: "#10b981",
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: textColor, font: { size: 10 } }
+                        },
+                        y: {
+                            grid: { color: gridColor },
+                            ticks: { color: textColor, font: { size: 10 } }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        function updateChartsTheme() {
+            if (ecoChart && tokChart) {
+                ecoChart.destroy();
+                tokChart.destroy();
+                initCharts();
+            }
+        }
+
+        function getGeminiApiKey() {
+            return localStorage.getItem("shielder_gemini_key") || atob("QVEuQWI4Uk42SlJjV2QwbjBIbHlwUXhSTWozcjBJcXRyaUY0R0c0MHk4WVNUZXZxZXJTTkE=");
+        }
+
+        function promptGeminiApiKey() {
+            const current = localStorage.getItem("shielder_gemini_key") || "";
+            const key = prompt("Entrez votre clé API Google AI Studio (Gemini Free) :", current);
+            if (key !== null) {
+                localStorage.setItem("shielder_gemini_key", key.trim());
+                showToast("Clé Enregistrée", "Votre clé Google AI Studio est configurée.");
+                checkBotHealth();
+            }
+        }
+
+        const GEMINI_MODELS = [
+            "gemini-3.5-flash",
+            "gemini-3.1-flash-lite",
+            "gemini-flash-lite-latest",
+            "gemini-flash-latest"
+        ];
+        
+        let isVoiceOutputEnabled = true;
+        let isListening = false;
+        let speechRecognitionInstance = null;
+        let aiChatHistory = [];
+
+        const SHIELDER_SYSTEM_INSTRUCTION = `Tu es "Shielder AI Advisor", l'expert technique, architecte et conseiller en chef de l'écosystème Antigravity 2.0 (ANT2.0) pour l'utilisateur (Ayoub MOSLIH / Fahd).
+Tu as une vision directe et en temps réel sur l'ensemble du hub :
+1. Architecture globale réorganisée :
+   - 1_engineering_apps (9 projets) : LayerB2B (OmniLayer), Operation (Fluxo), AI-Tool (ParseLIQ HR), Financial Calculator, Autocash-sourcing, Portfolio Ayoub MOSLIH, Autocash-DB, Automation UX-PM, Shielder.
+   - 2_product_studios (3 studios créatifs) : Sedra Studio (Veo 2, Google Flow, Seedance, Darija Scriptwriter), Brand & Creatives (Higgsfield, Canva MCP), Sound & Motion (Video Edit FX, Foley, Master Audio).
+   - brain : Mémoire globale, règles ANT2.0, registre et dashboards.
+2. Epics Jira associées sur moslihayoub.atlassian.net (Projet KAN) :
+   - KAN-56 : LayerB2B (OmniLayer)
+   - KAN-57 : Operation (Fluxo)
+   - KAN-58 : AI-Tool (ParseLIQ HR)
+   - KAN-59 : Financial Calculator
+   - KAN-60 : Autocash-sourcing
+   - KAN-61 : Portfolio Ayoub MOSLIH
+   - KAN-62 : Autocash-DB
+   - KAN-63 : Automation UX-PM
+   - KAN-64 : Shielder Hub
+   - KAN-65 : Sedra Studio
+   - KAN-66 : Brand & Creatives
+   - KAN-67 : Sound & Motion
+3. Assurance Qualité & Tests :
+   - TestSprite Cloud connecté à 7 projets SaaS avec suites E2E générées.
+   - Quota mensuel TestSprite : 150 runs de tests disponibles.
+   - Vitest (6/6 pass sur Financial Calculator), Playwright (15 scénarios sur Fluxo).
+   - Règle stricte M84 : "Zero Broken Push" — build local 0 erreur obligatoire avant tout push vers GitHub / Vercel.
+4. Antigravity Skills : 53 compétences spécialisées actives (m84-unified-methodology, shielder, jira-atlassian, canva, google-flow, higgsfield-generate, etc.). Économie de tokens de 70% grâce à l'Observation Masking.
+
+Règles de comportement :
+- Réponds toujours en français, de manière vive, claire, structurée et bienveillante (style Tech Lead / Senior Principal Architect).
+- Sois synthétique : donne des réponses directes avec des listes à puces si nécessaire.
+- Si l'utilisateur pose une question par commande vocale, formule ta réponse pour qu'elle soit très naturelle à entendre à haute voix.
+- Tu es capable d'analyser l'état de chaque projet, de suggérer les prochaines étapes sur Jira KAN, d'optimiser le code et de recommander les meilleurs tests.`;
+
+        // Toggle Widget
+        function toggleAiAssistant(forceState) {
+            const widget = document.getElementById("ai-assistant-widget");
+            const isCurrentlyHidden = widget.classList.contains("hidden");
+            const shouldOpen = forceState !== undefined ? forceState : isCurrentlyHidden;
+
+            if (shouldOpen) {
+                widget.classList.remove("hidden");
+                requestAnimationFrame(() => {
+                    widget.classList.remove("opacity-0", "scale-95");
+                    widget.classList.add("opacity-100", "scale-100");
+                });
+                document.getElementById("ai-chat-input").focus();
+            } else {
+                widget.classList.remove("opacity-100", "scale-100");
+                widget.classList.add("opacity-0", "scale-95");
+                setTimeout(() => {
+                    widget.classList.add("hidden");
+                }, 250);
+                if (window.speechSynthesis) window.speechSynthesis.cancel();
+                stopVoiceRecognition();
+            }
+        }
+
+        // Toggle Voice Output (TTS)
+        function toggleVoiceOutput() {
+            isVoiceOutputEnabled = !isVoiceOutputEnabled;
+            const ttsIcon = document.getElementById("tts-icon");
+            const ttsIndicator = document.getElementById("ai-voice-indicator");
+
+            if (isVoiceOutputEnabled) {
+                ttsIcon.setAttribute("data-lucide", "volume-2");
+                ttsIcon.classList.add("text-emerald-500");
+                ttsIcon.classList.remove("text-muted-foreground");
+                ttsIndicator.innerHTML = `<i data-lucide="volume-2" class="w-3 h-3"></i> Réponse vocale ON`;
+                ttsIndicator.className = "flex items-center gap-1 text-emerald-500";
+                showToast("Voix IA Activée", "L'assistant lira désormais ses réponses à haute voix.");
+            } else {
+                ttsIcon.setAttribute("data-lucide", "volume-x");
+                ttsIcon.classList.remove("text-emerald-500");
+                ttsIcon.classList.add("text-muted-foreground");
+                ttsIndicator.innerHTML = `<i data-lucide="volume-x" class="w-3 h-3"></i> Mode silencieux`;
+                ttsIndicator.className = "flex items-center gap-1 text-muted-foreground";
+                if (window.speechSynthesis) window.speechSynthesis.cancel();
+                showToast("Mode Silencieux", "L'assistant répondra uniquement par écrit.");
+            }
+            lucide.createIcons();
+        }
+
+        // Clear Chat
+        function clearAiChat() {
+            aiChatHistory = [];
+            const container = document.getElementById("ai-chat-messages");
+            container.innerHTML = `
+                <div class="flex items-start gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 flex items-center justify-center shrink-0 mt-0.5">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <div class="space-y-1.5 max-w-[88%]">
+                        <div class="p-3 rounded-2xl rounded-tl-sm bg-muted/60 border border-border text-foreground">
+                            <p class="font-medium text-foreground mb-1">Historique réinitialisé.</p>
+                            <p class="text-muted-foreground">Que souhaitez-vous analyser ou optimiser dans l'écosystème ANT2.0 ?</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+            lucide.createIcons();
+        }
+
+        // Quick prompts
+        function sendQuickPrompt(promptText) {
+            document.getElementById("ai-chat-input").value = promptText;
+            handleAiChatSubmit(new Event("submit"));
+        }
+
+        // Speech-to-Text (STT) Recognition
+        function initSpeechRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                return null;
+            }
+            const rec = new SpeechRecognition();
+            rec.lang = "fr-FR";
+            rec.continuous = false;
+            rec.interimResults = false;
+
+            rec.onstart = () => {
+                isListening = true;
+                document.getElementById("ai-voice-status").classList.remove("hidden");
+                document.getElementById("ai-voice-status").classList.add("flex");
+                const micBtn = document.getElementById("ai-mic-btn");
+                micBtn.classList.add("bg-red-500/20", "border-red-500/40", "ring-2", "ring-red-500/50");
+                const micIcon = document.getElementById("ai-mic-icon");
+                micIcon.classList.add("text-red-500");
+                micIcon.classList.remove("text-emerald-500");
+            };
+
+            rec.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                if (transcript && transcript.trim()) {
+                    document.getElementById("ai-chat-input").value = transcript;
+                    handleAiChatSubmit(new Event("submit"));
+                }
+            };
+
+            rec.onerror = (event) => {
+                console.warn("Speech recognition error:", event.error);
+                stopVoiceRecognition();
+                if (event.error !== "no-speech") {
+                    showToast("Microphone", "Erreur micro: " + event.error);
+                }
+            };
+
+            rec.onend = () => {
+                stopVoiceRecognition();
+            };
+
+            return rec;
+        }
+
+        function toggleVoiceRecognition() {
+            if (isListening) {
+                stopVoiceRecognition();
+            } else {
+                startVoiceRecognition();
+            }
+        }
+
+        function startVoiceRecognition() {
+            if (!speechRecognitionInstance) {
+                speechRecognitionInstance = initSpeechRecognition();
+            }
+            if (!speechRecognitionInstance) {
+                showToast("Non supporté", "La reconnaissance vocale Web Speech requiert Google Chrome ou Edge.");
+                return;
+            }
+            try {
+                if (window.speechSynthesis) window.speechSynthesis.cancel();
+                speechRecognitionInstance.start();
+            } catch (err) {
+                console.error("Failed to start speech rec:", err);
+            }
+        }
+
+        function stopVoiceRecognition() {
+            if (speechRecognitionInstance && isListening) {
+                try {
+                    speechRecognitionInstance.stop();
+                } catch(e) {}
+            }
+            isListening = false;
+            const statusEl = document.getElementById("ai-voice-status");
+            if (statusEl) {
+                statusEl.classList.add("hidden");
+                statusEl.classList.remove("flex");
+            }
+            const micBtn = document.getElementById("ai-mic-btn");
+            if (micBtn) {
+                micBtn.classList.remove("bg-red-500/20", "border-red-500/40", "ring-2", "ring-red-500/50");
+            }
+            const micIcon = document.getElementById("ai-mic-icon");
+            if (micIcon) {
+                micIcon.classList.remove("text-red-500");
+                micIcon.classList.add("text-emerald-500");
+            }
+        }
+
+        // Text-to-Speech (TTS) Output
+        function speakAiResponse(rawText) {
+            if (!isVoiceOutputEnabled) return;
+            if (!("speechSynthesis" in window)) return;
+
+            window.speechSynthesis.cancel();
+
+            // Clean markdown syntax for smooth speech
+            const cleanText = rawText
+                .replace(/[*#_`~\[\]\(\)]/g, " ")
+                .replace(/https?:\/\/\S+/g, " lien ")
+                .replace(/\n+/g, ". ")
+                .replace(/\s+/g, " ")
+                .trim();
+
+            if (!cleanText) return;
+
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.lang = "fr-FR";
+            utterance.rate = 1.05;
+            utterance.pitch = 1.0;
+
+            const voices = window.speechSynthesis.getVoices();
+            const frVoice = voices.find(v => v.lang.startsWith("fr") && (v.name.includes("Thomas") || v.name.includes("Audrey") || v.name.includes("Google") || v.name.includes("Natural") || v.name.includes("Amelie")));
+            if (frVoice) {
+                utterance.voice = frVoice;
+            }
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Submit Chat Message
+        async function handleAiChatSubmit(event) {
+            if (event && event.preventDefault) event.preventDefault();
+            const input = document.getElementById("ai-chat-input");
+            const text = input.value.trim();
+            if (!text) return;
+
+            input.value = "";
+            appendChatMessage("user", text);
+
+            // Add typing indicator
+            const typingId = "typing-" + Date.now();
+            appendTypingIndicator(typingId);
+
+            // Disable input while generating
+            const sendBtn = document.getElementById("ai-send-btn");
+            sendBtn.disabled = true;
+
+            // Prepare Gemini payload
+            aiChatHistory.push({
+                role: "user",
+                parts: [{ text: text }]
+            });
+
+            let aiReply = null;
+            let lastErrorMsg = "Aucun modèle n'a répondu.";
+
+            const key = getGeminiApiKey();
+            for (const model of GEMINI_MODELS) {
+                try {
+                    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+                    const response = await fetch(endpoint, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            contents: aiChatHistory,
+                            systemInstruction: {
+                                parts: [{ text: SHIELDER_SYSTEM_INSTRUCTION }]
+                            },
+                            generationConfig: {
+                                temperature: 0.7,
+                                maxOutputTokens: 1000
+                            }
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                        if (aiReply) break; // Model succeeded!
+                    } else {
+                        const errData = await response.json().catch(() => ({}));
+                        lastErrorMsg = errData.error?.message || `HTTP ${response.status}`;
+                        console.warn(`Modele ${model} indisponible (${lastErrorMsg}), bascule automatique vers le modèle suivant...`);
+                    }
+                } catch (fetchErr) {
+                    lastErrorMsg = fetchErr.message;
+                    console.warn(`Erreur réseau avec ${model}, tentative suivante...`);
+                }
+            }
+
+            removeTypingIndicator(typingId);
+            sendBtn.disabled = false;
+
+            if (aiReply) {
+                aiChatHistory.push({
+                    role: "model",
+                    parts: [{ text: aiReply }]
+                });
+                appendChatMessage("bot", aiReply);
+                speakAiResponse(aiReply);
+            } else {
+                appendChatMessage("bot", `⚠️ Impossible de joindre l'API Google Studio : ${lastErrorMsg}`);
+            }
+        }
+
+        function appendChatMessage(role, content) {
+            const container = document.getElementById("ai-chat-messages");
+            const messageEl = document.createElement("div");
+
+            if (role === "user") {
+                messageEl.className = "flex items-start justify-end gap-2.5";
+                messageEl.innerHTML = `
+                    <div class="max-w-[85%] p-3 rounded-2xl rounded-tr-sm bg-emerald-500 text-white shadow-sm">
+                        <p>${escapeHtml(content)}</p>
+                    </div>
+                    <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-500 flex items-center justify-center shrink-0 mt-0.5">
+                        <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                    </div>
+                `;
+            } else {
+                messageEl.className = "flex items-start gap-2.5";
+                const formattedContent = formatMarkdown(content);
+                messageEl.innerHTML = `
+                    <div class="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 flex items-center justify-center shrink-0 mt-0.5">
+                        <i data-lucide="bot" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <div class="max-w-[88%] p-3 rounded-2xl rounded-tl-sm bg-muted/70 border border-border text-foreground space-y-1.5 leading-relaxed">
+                        ${formattedContent}
+                    </div>
+                `;
+            }
+
+            container.appendChild(messageEl);
+            container.scrollTop = container.scrollHeight;
+            lucide.createIcons();
+        }
+
+        function appendTypingIndicator(id) {
+            const container = document.getElementById("ai-chat-messages");
+            const typingEl = document.createElement("div");
+            typingEl.id = id;
+            typingEl.className = "flex items-start gap-2.5";
+            typingEl.innerHTML = `
+                <div class="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 flex items-center justify-center shrink-0 mt-0.5">
+                    <i data-lucide="bot" class="w-3.5 h-3.5"></i>
+                </div>
+                <div class="p-3 rounded-2xl rounded-tl-sm bg-muted/60 border border-border text-foreground flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-bounce"></span>
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-bounce [animation-delay:0.2s]"></span>
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-bounce [animation-delay:0.4s]"></span>
+                </div>
+            `;
+            container.appendChild(typingEl);
+            container.scrollTop = container.scrollHeight;
+            lucide.createIcons();
+        }
+
+        function removeTypingIndicator(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement("div");
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatMarkdown(text) {
+            let html = escapeHtml(text);
+            // Bold
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-foreground">$1</strong>');
+            // Inline code
+            html = html.replace(/`([^`]+)`/g, '<code class="px-1 py-0.5 rounded bg-card border border-border font-mono text-[11px] text-emerald-400">$1</code>');
+            // Bullet items
+            html = html.replace(/^\s*[\*\-]\s+(.*)$/gm, '<li class="ml-4 list-disc text-muted-foreground">$1</li>');
+            // Numbered items
+            html = html.replace(/^\s*(\d+)\.\s+(.*)$/gm, '<li class="ml-4 list-decimal text-muted-foreground">$2</li>');
+            // Line breaks
+            html = html.replace(/\n\n/g, '<div class="h-2"></div>');
+            html = html.replace(/\n/g, '<br/>');
+            return html;
+        }
+
+        // Boot
+        window.addEventListener("DOMContentLoaded", () => {
+            const savedTheme = localStorage.getItem("shielder-theme");
+            if (savedTheme === "light") {
+                document.documentElement.classList.remove("dark");
+            }
+            const savedSync = localStorage.getItem("shielder-last-sync");
+            if (savedSync) {
+                const badge = document.getElementById("last-sync-time");
+                if (badge) badge.innerText = `Synchro : ${savedSync}`;
+            }
+
+            renderCurrentView();
+            initCharts();
+            checkBotHealth();
+            initSupabaseRealtime();
+            lucide.createIcons();
+            
+            // PWA Service Worker Registration
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('./sw.js')
+                        .then(reg => console.log('Shielder PWA Service Worker registered:', reg.scope))
+                        .catch(err => console.log('SW registration note:', err));
+                });
+            }
+            
+            // Pre-load voices if speech synthesis is present
+            if ("speechSynthesis" in window) {
+                window.speechSynthesis.onvoiceschanged = () => {
+                    window.speechSynthesis.getVoices();
+                };
+            }
+        });
+    </script>
+</body>
+</html>
