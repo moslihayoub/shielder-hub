@@ -163,38 +163,37 @@
                 </div>
             </div>
 
-            <!-- Controls & Theme Toggle -->
+                        <!-- Controls & Theme Toggle -->
             <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                <!-- Mobile Search Button -->
+                <!-- Mobile Search Button (Icon Only) -->
                 <button onclick="openOmnibarModal()" aria-label="Rechercher ou exécuter une commande" title="Rechercher (⌘K)" class="md:hidden p-2 rounded-lg border border-border bg-card hover:bg-accent text-foreground transition w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center shrink-0">
                     <i data-lucide="search" class="w-4 h-4 text-emerald-500"></i>
                 </button>
 
                 <!-- Manual On-Demand Sync Button -->
-                <button onclick="triggerManualSync()" id="global-sync-btn" aria-label="Lancer la synchronisation manuelle" title="Synchroniser à la demande" class="p-2 lg:px-3 lg:py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 transition flex items-center gap-1.5 text-xs font-semibold shadow-xs group w-9 h-9 sm:w-10 sm:h-10 justify-center">
+                <button onclick="triggerManualSync()" id="global-sync-btn" aria-label="Lancer la synchronisation manuelle" title="Synchroniser à la demande" class="h-9 sm:h-10 px-2.5 lg:px-3 rounded-lg border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 transition flex items-center gap-1.5 text-xs font-semibold shadow-xs group w-auto shrink-0 whitespace-nowrap">
                     <i data-lucide="refresh-cw" id="global-sync-icon" class="w-3.5 h-3.5 transition-transform group-hover:rotate-45 shrink-0"></i>
                     <span id="global-sync-text" class="hidden xl:inline">Synchroniser</span>
                 </button>
 
                 <!-- Install PWA App Button (Desktop & Tablet) -->
-                <button onclick="openPwaInstallModal()" id="pwa-install-nav-btn" aria-label="Installer l'application PWA" title="Installer l'App" class="hidden sm:flex p-2 lg:px-2.5 lg:py-1.5 rounded-lg border border-border bg-card hover:bg-accent text-foreground transition items-center gap-1.5 text-xs font-medium w-9 h-9 sm:w-10 sm:h-10 justify-center">
+                <button onclick="openPwaInstallModal()" id="pwa-install-nav-btn" aria-label="Installer l'application PWA" title="Installer l'App" class="hidden sm:flex h-9 sm:h-10 px-2.5 lg:px-3 rounded-lg border border-border bg-card hover:bg-accent text-foreground transition items-center gap-1.5 text-xs font-medium w-auto shrink-0 whitespace-nowrap">
                     <i data-lucide="smartphone" class="w-4 h-4 text-emerald-500 shrink-0"></i>
                     <span class="hidden xl:inline">Installer l'App</span>
                 </button>
 
                 <!-- Jira Link (Visible from sm and up) -->
-                <a href="https://moslihayoub.atlassian.net/jira/software/projects/KAN/boards/1" target="_blank" aria-label="Ouvrir le Kanban Jira KAN" title="Jira KAN" class="hidden sm:flex p-2 lg:px-2.5 lg:py-1.5 rounded-lg border border-border bg-card hover:bg-accent text-blue-500 transition items-center gap-1 text-xs font-medium w-9 h-9 sm:w-10 sm:h-10 justify-center">
+                <a href="https://moslihayoub.atlassian.net/jira/software/projects/KAN/boards/1" target="_blank" aria-label="Ouvrir le Kanban Jira KAN" title="Jira KAN" class="hidden sm:flex h-9 sm:h-10 px-2.5 lg:px-3 rounded-lg border border-border bg-card hover:bg-accent text-blue-500 transition items-center gap-1 text-xs font-medium w-auto shrink-0 whitespace-nowrap">
                     <i data-lucide="kanban" class="w-4 h-4 shrink-0"></i>
                     <span class="hidden xl:inline">Jira KAN</span>
                 </a>
 
-                <!-- Dark / Light Mode Toggle -->
-                <button onclick="toggleTheme()" aria-label="Basculer entre le mode clair et sombre" class="p-2 rounded-lg border border-border bg-card hover:bg-accent text-foreground transition w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center" title="Basculer Thème">
+                <!-- Dark / Light Mode Toggle (Icon Only) -->
+                <button onclick="toggleTheme()" aria-label="Basculer entre le mode clair et sombre" class="p-2 rounded-lg border border-border bg-card hover:bg-accent text-foreground transition w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center shrink-0" title="Basculer Thème">
                     <i data-lucide="sun" id="theme-icon-sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
                     <i data-lucide="moon" id="theme-icon-moon" class="w-4 h-4 block dark:hidden text-slate-700"></i>
                 </button>
-            </div>
-        </div>
+            </div></div>
     </header>
 
     <!-- Main Container -->
