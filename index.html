@@ -532,48 +532,52 @@
     </main>
 
     <!-- Omnibar Modal (Command Palette Cmd+K) -->
-    <div id="omnibar-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-start justify-center pt-20 px-4">
-        <div class="w-full max-w-xl rounded-xl border border-border bg-card shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
+    <div id="omnibar-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-start justify-center pt-8 sm:pt-20 px-3 sm:px-4">
+        <div class="w-full max-w-xl rounded-2xl border border-border bg-card shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
             
-            <div class="p-3 border-b border-border flex items-center gap-3">
-                <i data-lucide="terminal" class="w-5 h-5 text-emerald-500 shrink-0"></i>
-                <input id="omnibar-input" oninput="handleOmnibarSearch(this.value)" type="text" placeholder="Taper une commande Shielder (/goal, check, jira...) ou chercher un projet..." class="w-full bg-transparent border-0 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none">
-                <button onclick="closeOmnibarModal()" class="text-xs px-2 py-1 rounded bg-muted text-muted-foreground hover:text-foreground">Échap</button>
+            <div class="p-3 sm:p-3.5 border-b border-border flex items-center gap-2.5">
+                <i data-lucide="search" class="w-4 h-4 text-emerald-500 shrink-0"></i>
+                <input id="omnibar-input" oninput="handleOmnibarSearch(this.value)" type="text" placeholder="Rechercher ou taper /goal, check..." class="w-full bg-transparent border-0 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none">
+                <button onclick="closeOmnibarModal()" class="text-xs px-2.5 py-1.5 rounded-lg bg-muted text-foreground hover:bg-accent font-medium shrink-0">
+                    <span class="sm:hidden">Fermer</span>
+                    <span class="hidden sm:inline">Échap</span>
+                </button>
             </div>
 
-            <div id="omnibar-results" class="max-h-72 overflow-y-auto p-2 space-y-1 text-xs">
+            <div id="omnibar-results" class="max-h-80 overflow-y-auto p-2.5 space-y-1 text-xs">
                 <!-- Actions -->
                 <div class="px-2 py-1.5 text-[10px] font-semibold uppercase text-muted-foreground">Commandes Shielder Rapides</div>
-                <div onclick="execOmniAction('check')" class="p-2 rounded-lg hover:bg-accent cursor-pointer flex items-center justify-between group">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="play" class="w-4 h-4 text-emerald-500"></i>
+                <div onclick="execOmniAction('check')" class="p-2.5 rounded-lg hover:bg-accent cursor-pointer flex items-center justify-between group active:scale-[0.99] transition">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <i data-lucide="play" class="w-4 h-4 text-emerald-500 shrink-0"></i>
                         <span class="font-medium text-foreground">shielder check</span>
-                        <span class="text-muted-foreground">— Lancer l'audit de santé immédiat des 12 projets</span>
+                        <span class="text-muted-foreground hidden sm:inline truncate">— Audit immédiat des 12 projets</span>
                     </div>
-                    <kbd class="px-1.5 py-0.5 rounded border border-border bg-muted text-[10px]">Entrée</kbd>
+                    <kbd class="hidden sm:inline-flex px-1.5 py-0.5 rounded border border-border bg-muted text-[10px]">Entrée</kbd>
                 </div>
-                <div onclick="execOmniAction('goal')" class="p-2 rounded-lg hover:bg-accent cursor-pointer flex items-center justify-between group">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="repeat" class="w-4 h-4 text-cyan-500"></i>
+                <div onclick="execOmniAction('goal')" class="p-2.5 rounded-lg hover:bg-accent cursor-pointer flex items-center justify-between group active:scale-[0.99] transition">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <i data-lucide="repeat" class="w-4 h-4 text-cyan-500 shrink-0"></i>
                         <span class="font-medium text-foreground">/goal</span>
-                        <span class="text-muted-foreground">— Mode d'autonomie complète (Loop & Self-healing)</span>
+                        <span class="text-muted-foreground hidden sm:inline truncate">— Mode d'autonomie complète (Loop & Fix)</span>
                     </div>
                 </div>
-                <div onclick="execOmniAction('jira')" class="p-2 rounded-lg hover:bg-accent cursor-pointer flex items-center justify-between group">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="trello" class="w-4 h-4 text-blue-500"></i>
+                <div onclick="execOmniAction('jira')" class="p-2.5 rounded-lg hover:bg-accent cursor-pointer flex items-center justify-between group active:scale-[0.99] transition">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <i data-lucide="trello" class="w-4 h-4 text-blue-500 shrink-0"></i>
                         <span class="font-medium text-foreground">Ouvrir Jira KAN</span>
-                        <span class="text-muted-foreground">— Voir le tableau Kanban Digital Product M84</span>
+                        <span class="text-muted-foreground hidden sm:inline truncate">— Kanban Digital Product</span>
                     </div>
                 </div>
 
                 <div class="px-2 py-1.5 text-[10px] font-semibold uppercase text-muted-foreground mt-2">Accès Direct Projets</div>
-                <div id="omnibar-projects-list"></div>
+                <div id="omnibar-projects-list" class="space-y-0.5"></div>
             </div>
 
             <div class="p-2.5 bg-muted/40 border-t border-border flex items-center justify-between text-[11px] text-muted-foreground">
-                <span>Shielder Antigravity 2.0 Engine</span>
-                <span class="flex items-center gap-2">
+                <span class="flex items-center gap-1.5 font-medium"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-500"></i> Shielder Hub</span>
+                <span class="sm:hidden text-[10px]">Touchez un élément pour l'ouvrir</span>
+                <span class="hidden sm:flex items-center gap-2">
                     <span>Navigation <kbd class="px-1 py-0.5 rounded border bg-card text-[10px]">↑</kbd> <kbd class="px-1 py-0.5 rounded border bg-card text-[10px]">↓</kbd></span>
                     <span>Sélectionner <kbd class="px-1 py-0.5 rounded border bg-card text-[10px]">↵</kbd></span>
                 </span>
@@ -609,13 +613,13 @@
             <div class="p-5 space-y-6 overflow-y-auto text-xs">
                 
                 <!-- 11 Slots Disponibles Section -->
-                <div class="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4 space-y-3">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <span class="flex h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
-                            <h4 class="font-semibold text-sm text-foreground">11 Slots Libres Disponibles — Extensions Suggérées</h4>
+                <div class="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-3.5 sm:p-4 space-y-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="flex h-2.5 w-2.5 rounded-full bg-emerald-500 shrink-0"></span>
+                            <h4 class="font-semibold text-sm text-foreground truncate">11 Slots Libres Disponibles</h4>
                         </div>
-                        <span class="text-[10px] text-muted-foreground font-mono">Prêts pour installation via Antigravity CLI</span>
+                        <span class="text-[10px] text-muted-foreground font-mono shrink-0">Prêts pour installation CLI</span>
                     </div>
                     <p class="text-muted-foreground text-xs leading-relaxed">
                         Ces slots d'extension mémoire permettent d'ajouter de nouvelles capacités spécialisées sans impacter le budget de contexte token grâce à l'<em>Observation Masking</em>.
@@ -737,9 +741,9 @@
             </div>
 
             <!-- Footer -->
-            <div class="p-4 bg-muted/40 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
-                <span>Capacité Antigravity : 53 actifs + 11 réservés = 64 slots</span>
-                <button onclick="closeSkillsCatalogModal()" class="px-3 py-1.5 rounded-lg bg-card border border-border text-foreground hover:bg-muted transition font-medium">Fermer</button>
+            <div class="p-3 sm:p-4 bg-muted/40 border-t border-border flex items-center justify-between gap-2 text-[11px] sm:text-xs text-muted-foreground">
+                <span class="line-clamp-1">53 actifs + 11 slots libres (64 total)</span>
+                <button onclick="closeSkillsCatalogModal()" class="px-3 py-1.5 rounded-lg bg-card border border-border text-foreground hover:bg-muted transition font-medium shrink-0">Fermer</button>
             </div>
 
         </div>
@@ -812,10 +816,10 @@
     </div>
 
     <!-- AI Assistant Floating Widget Window (Full Page on Mobile, Floating on Desktop) -->
-    <div id="ai-assistant-widget" class="fixed inset-0 sm:inset-auto sm:bottom-24 sm:right-6 z-50 w-full sm:w-[420px] sm:max-w-[calc(100vw-2rem)] h-full sm:h-[620px] max-h-full sm:max-h-[82vh] rounded-none sm:rounded-2xl border-0 sm:border border-border bg-card/98 sm:glass-panel shadow-2xl flex flex-col overflow-hidden hidden transition-all duration-300 transform scale-95 opacity-0">
+    <div id="ai-assistant-widget" class="fixed inset-0 sm:inset-auto sm:bottom-24 sm:right-6 z-50 w-full sm:w-[420px] sm:max-w-[calc(100vw-2rem)] h-full sm:h-[620px] max-h-full sm:max-h-[82vh] rounded-none sm:rounded-2xl border-0 sm:border border-border bg-background shadow-2xl flex flex-col overflow-hidden hidden transition-all duration-300 transform scale-95 opacity-0">
         
         <!-- Header -->
-        <div class="p-3.5 sm:p-4 bg-card/95 border-b border-border flex items-center justify-between backdrop-blur-md pt-[max(0.875rem,env(safe-area-inset-top))]">
+        <div class="p-3.5 sm:p-4 bg-background border-b border-border flex items-center justify-between shrink-0 pt-[max(0.875rem,env(safe-area-inset-top))]">
             <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
                 <!-- Mobile Back Button -->
                 <button onclick="toggleAiAssistant(false)" title="Fermer" class="sm:hidden p-2 -ml-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition">
@@ -857,7 +861,7 @@
         </div>
 
         <!-- Chat Messages Area -->
-        <div id="ai-chat-messages" class="flex-1 p-3.5 overflow-y-auto space-y-3 text-xs leading-relaxed">
+        <div id="ai-chat-messages" class="flex-1 p-3.5 sm:p-4 overflow-y-auto space-y-3 text-xs leading-relaxed bg-background">
             <!-- Initial Welcome Message from Shielder Advisor -->
             <div class="flex items-start gap-2.5">
                 <div class="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 flex items-center justify-center shrink-0 mt-0.5">
@@ -897,7 +901,7 @@
         </div>
 
         <!-- Input Bar -->
-        <div class="p-3 bg-card/95 border-t border-border backdrop-blur-sm pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+        <div class="p-3 bg-background border-t border-border pb-[max(0.75rem,env(safe-area-inset-bottom))] shrink-0">
             <form id="ai-chat-form" onsubmit="handleAiChatSubmit(event)" class="flex items-center gap-2">
                 <!-- Mic Button -->
                 <button type="button" id="ai-mic-btn" onclick="toggleVoiceRecognition()" title="Parler vocalement" class="p-2.5 rounded-xl bg-secondary hover:bg-accent text-foreground border border-border transition-all duration-200 shrink-0 focus:outline-none">
@@ -1667,18 +1671,18 @@
             
             filtered.forEach(p => {
                 const div = document.createElement("div");
-                div.className = "p-2 rounded-lg hover:bg-accent cursor-pointer flex items-center justify-between";
+                div.className = "p-2.5 sm:p-2 rounded-lg hover:bg-accent cursor-pointer flex items-center justify-between gap-2 active:scale-[0.99] transition";
                 div.onclick = () => {
                     closeOmnibarModal();
                     showToast(p.name, "Sélectionné • Path : " + p.path);
                 };
                 div.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                        <span class="font-medium text-foreground">${p.name}</span>
-                        <span class="text-blue-500 font-mono text-[10px]">${p.epic}</span>
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+                        <span class="font-medium text-foreground truncate">${p.name}</span>
+                        <span class="text-blue-500 font-mono text-[10px] bg-blue-500/10 px-1.5 py-0.5 rounded shrink-0">${p.epic}</span>
                     </div>
-                    <span class="text-muted-foreground text-[10px] font-mono">${p.stack}</span>
+                    <span class="text-muted-foreground text-[10px] font-mono shrink-0 hidden sm:inline">${p.stack}</span>
                 `;
                 list.appendChild(div);
             });
