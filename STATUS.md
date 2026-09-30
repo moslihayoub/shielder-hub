@@ -1,9 +1,21 @@
 # 🛡️ Shielder — Multi-Project Guardian & Diagnostic Hub
 
 > **Status:** Active & Operational  
-> **Last Audit:** 2026-09-30 14:10:00  
+> **Last Audit:** 2026-09-30 17:45:00  
 > **Host Account:** `moslihayoub@gmail.com`  
 > **Ecosystem:** `~/Downloads/ANT2.0` (12 tracked projects)
+
+---
+
+## 📅 Historique Récent (Changelog)
+
+**[2026-09-30] Refonte UI/UX Shadcn & Mobile-First**
+- **Charte Visuelle Shadcn** : Application stricte de la palette (Blanc, Bleu #2563eb, Noir #09090b) sur les graphiques Chart.js (Ecosystem & Tokens) respectant parfaitement le Light/Dark mode.
+- **Correction Navbar (Web/Mobile)** : Suppression des `w-10` forcés qui tronquaient le texte. Navbar désormais 100% fluide, boutons icônes parfaitement carrés, et recherche extensible.
+- **Tags & Badges** : Ajout d'espacements dynamiques (`gap-2`) et d'un padding élargi (`px-2.5 py-1`) pour éviter l'effet "bloc étouffé" au retour à la ligne sur mobile.
+- **Bouton Assistant IA** : Ajustement dimensionnel (`w-14 h-14` sur mobile, `w-16 h-16` sur desktop) pour corriger l'effet d'écrasement.
+- **Branding Shielder** : Injection officielle du logo `icon.svg` dans la Navbar, des métadonnées Favicon, et `apple-touch-icon`.
+- **Intégration Jira** : Réparation du lien Kanban sur les projets (remplacement de l'icône `trello` obsolète par `kanban` valide de Lucide).
 
 ---
 
