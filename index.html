@@ -171,21 +171,21 @@
                 </button>
 
                 <!-- Manual On-Demand Sync Button -->
-                <button onclick="triggerManualSync()" id="global-sync-btn" aria-label="Lancer la synchronisation manuelle" title="Synchroniser à la demande" class="p-2 sm:px-3 sm:py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 transition flex items-center gap-1.5 text-xs font-semibold shadow-xs group min-w-[36px] min-h-[36px] justify-center">
-                    <i data-lucide="refresh-cw" id="global-sync-icon" class="w-3.5 h-3.5 transition-transform group-hover:rotate-45"></i>
-                    <span id="global-sync-text" class="hidden sm:inline">Synchroniser</span>
+                <button onclick="triggerManualSync()" id="global-sync-btn" aria-label="Lancer la synchronisation manuelle" title="Synchroniser à la demande" class="p-2 lg:px-3 lg:py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 transition flex items-center gap-1.5 text-xs font-semibold shadow-xs group min-w-[36px] min-h-[36px] justify-center">
+                    <i data-lucide="refresh-cw" id="global-sync-icon" class="w-3.5 h-3.5 transition-transform group-hover:rotate-45 shrink-0"></i>
+                    <span id="global-sync-text" class="hidden xl:inline">Synchroniser</span>
                 </button>
 
                 <!-- Install PWA App Button (Desktop & Tablet) -->
-                <button onclick="openPwaInstallModal()" id="pwa-install-nav-btn" aria-label="Installer l'application PWA" title="Installer l'App" class="hidden sm:flex p-2 sm:px-2.5 sm:py-1.5 rounded-lg border border-border bg-card hover:bg-accent text-foreground transition items-center gap-1.5 text-xs font-medium min-w-[36px] min-h-[36px] justify-center">
-                    <i data-lucide="smartphone" class="w-4 h-4 text-emerald-500"></i>
-                    <span class="hidden lg:inline">Installer l'App</span>
+                <button onclick="openPwaInstallModal()" id="pwa-install-nav-btn" aria-label="Installer l'application PWA" title="Installer l'App" class="hidden sm:flex p-2 lg:px-2.5 lg:py-1.5 rounded-lg border border-border bg-card hover:bg-accent text-foreground transition items-center gap-1.5 text-xs font-medium min-w-[36px] min-h-[36px] justify-center">
+                    <i data-lucide="smartphone" class="w-4 h-4 text-emerald-500 shrink-0"></i>
+                    <span class="hidden xl:inline">Installer l'App</span>
                 </button>
 
                 <!-- Jira Link (Visible from sm and up) -->
-                <a href="https://moslihayoub.atlassian.net/jira/software/projects/KAN/boards/1" target="_blank" aria-label="Ouvrir le Kanban Jira KAN" title="Jira KAN" class="hidden sm:flex p-2 rounded-lg border border-border bg-card hover:bg-accent text-blue-500 transition items-center gap-1 text-xs font-medium min-w-[36px] min-h-[36px] justify-center">
-                    <i data-lucide="trello" class="w-4 h-4"></i>
-                    <span class="hidden md:inline">Jira KAN</span>
+                <a href="https://moslihayoub.atlassian.net/jira/software/projects/KAN/boards/1" target="_blank" aria-label="Ouvrir le Kanban Jira KAN" title="Jira KAN" class="hidden sm:flex p-2 lg:px-2.5 lg:py-1.5 rounded-lg border border-border bg-card hover:bg-accent text-blue-500 transition items-center gap-1 text-xs font-medium min-w-[36px] min-h-[36px] justify-center">
+                    <i data-lucide="trello" class="w-4 h-4 shrink-0"></i>
+                    <span class="hidden xl:inline">Jira KAN</span>
                 </a>
 
                 <!-- Dark / Light Mode Toggle -->
@@ -377,7 +377,7 @@
                     </div>
 
                     <!-- Category Pills & Stack Select in one adaptive flex row -->
-                    <div class="flex items-center justify-between sm:justify-start gap-2 w-full sm:w-auto">
+                    <div class="flex flex-wrap items-center justify-between sm:justify-start gap-2 w-full sm:w-auto">
                         <!-- Category Filter Tabs -->
                         <div class="flex items-center p-1 rounded-lg border border-border bg-muted/40 text-xs shrink-0">
                             <button onclick="filterCategory('all')" id="tab-all" class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md font-medium bg-card text-foreground shadow-xs transition">Tous (12)</button>
@@ -1352,8 +1352,8 @@
                 card.innerHTML = `
                     <div class="space-y-4">
                         <!-- Top Header: Category Tag, Health Badge, Quick Links -->
-                        <div class="flex items-center justify-between gap-2">
-                            <div class="flex items-center gap-2">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div class="flex flex-wrap items-center gap-2">
                                 <span class="px-2 py-0.5 rounded-md text-[10px] font-medium bg-muted text-muted-foreground border border-border">${p.catLabel}</span>
                                 <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ${p.status}
