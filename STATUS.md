@@ -40,12 +40,12 @@ shielder list
 ### 🅰️ Engineering Apps & Analysis (`ANT2.0/1_engineering_apps/`)
 | Project | Stack | Database / Cloud | API Health | Jira Tag |
 | :--- | :--- | :--- | :--- | :--- |
-| **LayerB2B** *(OmniLayer)* | Next.js 15 | Supabase + GCP `omnilayerai` | Gemini Key Active | `[LAYERB2B]` |
-| **Operation** *(Fluxo)* | Next.js 14 | Supabase (100%) | Gemini Key Active | `[FLUXO]` |
-| **AI-Tool** *(parseliq-hr)* | React 19 / Vite | Local State (GCP `Tools AI`) | Gemini Key Active | `[AITOOL]` |
-| **Financial Calculator** | React 19 / Vite | Local State (GCP `App finance`) | Gemini Key Active | `[FINANCE]` |
+| **LayerB2B** *(OmniLayer)* | Next.js 15 | Supabase + GCP `omnilayerai` | Gemini + OpenRouter | `[LAYERB2B]` |
+| **Operation** *(Fluxo)* | Next.js 14 | Supabase (100%) | Gemini + OpenRouter | `[FLUXO]` |
+| **AI-Tool** *(parseliq-hr)* | React 19 / Vite | Local State (GCP `Tools AI`) | Gemini + OpenRouter | `[AITOOL]` |
+| **Financial Calculator** | React 19 / Vite | Local State (GCP `App finance`) | Gemini + OpenRouter | `[FINANCE]` |
 | **Autocash-sourcing** | React 19 / Vite | Local State | Nominal | `[AUTOCASH-SOURCING]` |
-| **Portfolio** *(Ayoub MOSLIH)* | React 19 / Vite | Firebase Hosting | Gemini Key Active | `[PORTFOLIO]` |
+| **Portfolio** *(Ayoub MOSLIH)* | React 19 / Vite | Firebase Hosting | Gemini + OpenRouter | `[PORTFOLIO]` |
 | **Agentic** | Python / HTML | Local State / Python server | Nominal | `[AGENTIC]` |
 | **Autocash-DB** | Python / Office | Local Cache (4.6MB AST) | Nominal | `[AUTOCASH-DB]` |
 | **Automation UX-PM** | Product / Office | Local Excel / SharePoint | Nominal | `[UX-PM]` |
